@@ -1,4 +1,4 @@
-playlist-hack-server
-====================
+playlist-hack
+=============
 
-Server for the playlist-hack webapp
+Tempo-based playlist generator which aggregates tracks into an anonymous Spotify playlist
