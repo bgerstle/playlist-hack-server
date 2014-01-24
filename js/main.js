@@ -1,12 +1,12 @@
 $(function () {
 
-var playlistModel = new PlaylistModel();
-var playlistView = new PlaylistView({
+var playbuttonModel = new PlayButtonModel();
+var playbuttonView = new PlayButtonView({
     el: $('#playlist'),
-    model: playlistModel,
+    model: playbuttonModel,
 });
 
-playlistModel.set({
+playbuttonModel.set({
     title: "Cycling",
     tracks: [
         '1HRtVWNhS9tEvDQyOKD9Fs', /* MJ Don't Stop */
