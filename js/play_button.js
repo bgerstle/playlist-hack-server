@@ -8,7 +8,7 @@ var supportedParametersHash = {
 this.PlayButtonModel = Backbone.Model.extend({
     defaults: {
         title: "Playlist",
-        theme: supportedParametersHash.theme.black,
+        theme: supportedParametersHash.theme.white,
         view: supportedParametersHash.view.list
     },
 
@@ -56,17 +56,8 @@ this.PlayButtonModel = Backbone.Model.extend({
         return "";
     },
 
-    getSrc: function() {
-        this.validate();
-        if (this.validationError) {
-            throw this.validationError;
-        }
-
-        var uri = ["https://embed.spotify.com/?uri=spotify:trackset",
-                  this.escape("title") || "",
-                  this.commaSeparatedTracks()].join(':');
-        var query = "?view=" + this.get("view") + "&theme=" + this.get("theme");
-        return uri + query;
+    encodedTitle: function () {
+        return encodeURIComponent(this.get("title"));
     }
 });
 
@@ -74,14 +65,34 @@ this.PlayButtonView= Backbone.View.extend({
     initialize: function(options) {
         this.model.on("change", this.render, this);
     },
+
+    tagName: 'iframe',
+
+    attributes: {
+        allowtransparency: "true",
+        frameborder: "0"
+    },
+
     hide: function() {
         this.$el.hide();
     },
+
     show: function() {
         this.$el.show();
     },
+
     render: function() {
-        this.$el.attr("src", this.model.getSrc());
+        if (this.model.validate()) {
+            throw "Failed to render play button: " + this.model.validationError;
+        }
+
+        var src = ["https://embed.spotify.com/?uri=spotify:trackset:",
+                   this.model.encodedTitle(), ":",
+                   this.model.commaSeparatedTracks(),
+                   "&view=", this.model.get("view"),
+                   "&theme=", this.model.get("theme")].join('');
+
+        this.$el.attr("src", src);
     }
 });
 })(this);
