@@ -25,13 +25,18 @@ var playlist = new EchoNest.StaticPlaylist([], {
         variety: 0.35,
         target_energy: 0.7,
         min_danceability: 0.4
-    }
+    },
+    reset: true,
+    silet: false
 });
 
-playlist.deferredFetch().always(function (collection, response, data) {
-    console.log("fetched playlist songs!");
+playlist.on('sync', function () {
+    playbuttonModel.set("tracks", playlist.getSpotifyTrackIDs());
+});
+
+playlist.deferredFetch().always(function (collection, response, options) {
+    console.log("fetch response: " + response);
     console.log(collection.toJSON());
-    playbuttonModel.set("tracks", collection.getSpotifyTrackIDs());
 });
 
 });

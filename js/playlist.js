@@ -64,19 +64,10 @@
 
     EchoNest.StaticPlaylist = Backbone.Collection.extend({
         model: EchoNest.SongModel,
-        initialize: function (models, options) {
-            var playlistParams = options ? options.playlistParams : {};
-            this.playlistParams = _.defaults(playlistParams, {
-                api_key: apiKey,
-                // required for cross-domain requests
-                format: 'jsonp',
-
-                // return spotify tracks, acoustic metadata, and ranking by default
-                bucket: ['id:spotify-US', 'tracks', 'audio_summary', 'song_hotttnesss'],
-
-                // limit results to specified catl
-                limit: true
-            });
+        initialize: function(models, options) {
+            if (options && options.playlistParams) {
+                this.setPlaylistParams(options.playlistParams);
+            }
         },
         url: function () {
             return endpoint + '/playlist/static' + queryStringFromParams(this.playlistParams);
@@ -86,18 +77,35 @@
         },
         deferredFetch: function (options) {
             var deferred = new $.Deferred();
-            this.fetch({
+            this.fetch(_.extend(options || {}, {
                 success: deferred.resolve.bind(deferred),
                 error: deferred.reject.bind(deferred)
-            });
+            }));
             return deferred.promise();
         },
         fetch: function(options) {
+            if (options && options.playlistParams) {
+                this.setPlaylistParams(options.playlistParams);
+            }
             return Backbone.Collection.prototype.fetch.call(this, _.defaults(options || {}, {
                 // required for cross-domain requests
                 dataType: 'jsonp',
                 callback: 'callback'
             }));
+        },
+        setPlaylistParams: function(params) {
+            this.playlistParams = _.defaults(params, {
+                api_key: apiKey,
+
+                // required for cross-domain requests
+                format: 'jsonp',
+
+                // return spotify tracks, acoustic metadata, and ranking by default
+                bucket: ['id:spotify-US', 'tracks', 'audio_summary', 'song_hotttnesss'],
+
+                // limit results to specified catl
+                limit: true
+            });
         },
         getSpotifyTrackIDs: function () {
             return _.reduce(this.models, function(memo, songModel) {
