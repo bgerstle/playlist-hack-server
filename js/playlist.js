@@ -59,6 +59,9 @@
         },
         getSpotifyTrackFID: function () {
             return this.getTrackFIDFromCatalog('spotify-US');
+        },
+        getSpotifyTrackID: function () {
+            return EchoNest.RosettaID.toSpotifyTrackID(this.getSpotifyTrackFID());
         }
     });
 
@@ -109,9 +112,9 @@
         },
         getSpotifyTrackIDs: function () {
             return _.reduce(this.models, function(memo, songModel) {
-                var trackFID = songModel.getSpotifyTrackFID();
-                if (trackFID) {
-                    memo.push(EchoNest.RosettaID.toSpotifyTrackID(trackFID));
+                var trackID = songModel.getSpotifyTrackID();
+                if (trackID) {
+                    memo.push(trackID);
                 }
                 return memo;
             }, []);

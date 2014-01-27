@@ -15,6 +15,12 @@
     <script type="text/javascript" src="js/playlist.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 </head>
+<script type="text/template" id="playlist-template">
+    <% _.each(songs, function (song) { %>
+        <li><a href="" modelID=<%= song.id %>><%= song.title %></a> — <%= song.artist_name %></li>
+    <% }); %>
+</script>
 <body>
+    <span id="playlist"></span><iframe id="preview"></iframe>
 </body>
 </html>

@@ -2,7 +2,8 @@ $().ready(function () {
 
 var playbuttonModel = new PlayButtonModel();
 var playbuttonView = new PlayButtonView({
-    id: 'playlist',
+    el: $('#preview'),
+    id: 'preview',
     model: playbuttonModel
 });
 
@@ -14,29 +15,54 @@ playbuttonModel.set({
 
 $('body').append(playbuttonView.el);
 
-var playlist = new EchoNest.StaticPlaylist([], {
-    playlistParams: {
+var defaultParams = {
         sort: 'energy-desc',
-        type: 'artist-radio',
-        artist: 'Michael Jackson',
         song_selection: 'energy-top',
         song_type: 'studio',
         results: 50,
         variety: 0.35,
         target_energy: 0.7,
         min_danceability: 0.4
-    },
+};
+
+var playlist = new EchoNest.StaticPlaylist([], {
+    playlistParams: _.defaults({
+        type: 'artist-radio',
+        artist: 'Michael Jackson'
+    }, defaultParams),
     reset: true,
     silet: false
-});
-
-playlist.on('sync', function () {
-    playbuttonModel.set("tracks", playlist.getSpotifyTrackIDs());
 });
 
 playlist.deferredFetch().always(function (collection, response, options) {
     console.log("fetch response: " + response);
     console.log(collection.toJSON());
 });
+
+var SongList = Backbone.View.extend({
+    initialize: function (attrs, options) {
+        this.model.on('sync', this.render.bind(this));
+
+        // perhaps do something w/ the router..?
+        this.$el.on('click a', function (e) {
+            e.preventDefault();
+            var modelID = $(e.target).attr('modelID');
+            var trackID = this.model.get(modelID).getSpotifyTrackID();
+            playbuttonModel.set("tracks", [trackID]);
+        }.bind(this));
+    },
+    template: function () {
+        return _.template($('#playlist-template').html(), {songs: this.model.toJSON()});
+    },
+    render: function () {
+        this.$el.html(this.template());
+    }
+});
+
+var defaultList = new SongList({
+    el: $('#playlist'),
+    model: playlist
+});
+defaultList.render();
 
 });
