@@ -7,9 +7,9 @@ var playbuttonView = new PlayButtonView({
 });
 
 playbuttonModel.set({
-    title: "Default Playlist",
-    view: playbuttonModel.supportedParameters.view.list,
-    theme: playbuttonModel.supportedParameters.theme.black
+    title: "",
+    view: playbuttonModel.supportedParameters.view.coverArt,
+    theme: playbuttonModel.supportedParameters.theme.white
 });
 
 $('body').append(playbuttonView.el);

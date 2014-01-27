@@ -86,13 +86,18 @@ this.PlayButtonView= Backbone.View.extend({
             throw "Failed to render play button: " + this.model.validationError;
         }
 
-        var src = ["https://embed.spotify.com/?uri=spotify:trackset:",
-                   this.model.encodedTitle(), ":",
-                   this.model.commaSeparatedTracks(),
-                   "&view=", this.model.get("view"),
-                   "&theme=", this.model.get("theme")].join('');
+        var src = [];
+        if (this.model.has("tracks")) {
+            var type = this.model.get("tracks").length > 1 ? 'trackset' : 'track';
+            src.push("https://embed.spotify.com/?uri=spotify:", type, ':');
+            if (type === 'trackset') {
+                src.push(this.model.encodedTitle(), ":", this.model.commaSeparatedTracks());
+            } else {
+                src.push(this.model.get("tracks").pop());
+            }
+        }
 
-        this.$el.attr("src", src);
+        this.$el.attr("src", src.join(''));
     }
 });
 })(this);
