@@ -23,7 +23,7 @@
             if (index !== 0 && index < _.size(pairs)) {
                 queryString = queryString + '&';
             }
-            var value = String(kvPair[0]);
+            var value = encodeURI(String(kvPair[0]));
             var key = kvPair[1];
             return queryString.concat(key + '=' + value);
         }, '?');

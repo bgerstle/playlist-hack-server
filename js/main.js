@@ -18,8 +18,13 @@ var playlist = new EchoNest.StaticPlaylist([], {
     playlistParams: {
         sort: 'energy-desc',
         type: 'artist-radio',
-        artist: 'Michael+Jackson',
-        song_selection: 'energy-top'
+        artist: 'Michael Jackson',
+        song_selection: 'energy-top',
+        song_type: 'studio',
+        results: 50,
+        variety: 0.35,
+        target_energy: 0.7,
+        min_danceability: 0.4
     }
 });
 
