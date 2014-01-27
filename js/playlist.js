@@ -33,7 +33,7 @@
 
     EchoNest.RosettaID = {
         Prefixes: {
-            spotifyTrack: 'spotify-WW:track:'
+            spotifyTrack: 'spotify-US:track:'
         },
         fromSpotifyTrackID: function(spotifyTrackID) {
             return this.Prefixes.spotifyTrack + spotifyTrackID;
@@ -58,7 +58,7 @@
             return null;
         },
         getSpotifyTrackFID: function () {
-            return this.getTrackFIDFromCatalog('spotify-WW');
+            return this.getTrackFIDFromCatalog('spotify-US');
         }
     });
 
@@ -70,7 +70,12 @@
                 api_key: apiKey,
                 // required for cross-domain requests
                 format: 'jsonp',
-                bucket: ['id:spotify-WW', 'tracks', 'audio_summary', 'song_hotttnesss']
+
+                // return spotify tracks, acoustic metadata, and ranking by default
+                bucket: ['id:spotify-US', 'tracks', 'audio_summary', 'song_hotttnesss'],
+
+                // limit results to specified catl
+                limit: true
             });
         },
         url: function () {
