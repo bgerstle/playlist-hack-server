@@ -16,9 +16,22 @@
     <script type="text/javascript" src="js/main.js"></script>
 </head>
 <script type="text/template" id="playlist-template">
+    <table>
+    <th>Song</th>
+    <th>Tempo</th>
+    <th>Energy</th>
+    <th>Danceability</th>
+    <th>Hotttnesss</th>
     <% _.each(songs, function (song) { %>
-        <li><a href="" modelID=<%= song.id %>><%= song.title %></a> — <%= song.artist_name %></li>
+        <tr>
+            <td><a href="" modelID=<%= song.id %>><%= song.title %></a> — <%= song.artist_name %></td>
+            <td><%= song.audio_summary.tempo %></td>
+            <td><%= song.audio_summary.energy %></td>
+            <td><%= song.audio_summary.danceability %></td>
+            <td><%= song.song_hotttnesss %></td>
+        </tr>
     <% }); %>
+    </table>
 </script>
 <body>
     <div id="playlist"></div><iframe id="preview"></iframe>

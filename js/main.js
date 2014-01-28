@@ -21,8 +21,10 @@ var defaultParams = {
         song_type: 'studio',
         results: 50,
         variety: 0.35,
-        min_energy: 0.75,
-        min_danceability: 0.8,
+        min_energy: 0.4,
+        min_danceability: 0.3,
+        target_song_hotttnesss: 0.6,
+        target_artist_hotttnesss: 0.6,
         target_tempo: 140
 };
 
