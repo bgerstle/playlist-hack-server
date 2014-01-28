@@ -21,14 +21,15 @@ var defaultParams = {
         song_type: 'studio',
         results: 50,
         variety: 0.35,
-        target_energy: 0.7,
-        min_danceability: 0.4
+        min_energy: 0.75,
+        min_danceability: 0.8,
+        target_tempo: 140
 };
 
 var playlist = new EchoNest.StaticPlaylist([], {
     playlistParams: _.defaults({
         type: 'artist-radio',
-        artist: 'Michael Jackson'
+        artist: 'Jamiroquai'
     }, defaultParams),
     reset: true,
     silet: false
