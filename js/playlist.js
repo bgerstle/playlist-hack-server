@@ -46,7 +46,49 @@
         EchoNest.RosettaID[fn].bind(EchoNest.RosettaID);
     });
 
+    var DeferredFetching = {};
+    DeferredFetching.prototype = {
+        deferredFetch: function (options) {
+            var deferred = new $.Deferred();
+            this.fetch(_.extend(options || {}, {
+                success: deferred.resolve.bind(deferred),
+                error: deferred.reject.bind(deferred)
+            }));
+            return deferred.promise();
+        }
+    };
+
     EchoNest.SongModel = Backbone.Model.extend({
+        initialize: function (attrs, options) {
+            if (options && options.songParams) {
+                this.songParams = options.songParams;
+            }
+        },
+        url: function () {
+            return endpoint + '/song/search/' + queryStringFromParams(_.defaults(this.songParams || {}, {
+                api_key: apiKey,
+                // required for cross-domain requests
+                format: 'jsonp'
+            }));
+        },
+        fetch: function (options) {
+            if (options && options.songParams) {
+                this.songParams = options.songParams;
+            }
+            return Backbone.Model.prototype.fetch.call(this, _.defaults(options || {}, {
+                // required for cross-domain requests
+                dataType: 'jsonp',
+                callback: 'callback'
+            }));
+        },
+        parse: function (data) {
+            if (this.collection) {
+                // if we're part of the collection, assume we're being passed the song JSON object directly
+                return data;
+            }
+            // otherwise, we need to grab an object out of the "songs" field
+            return _(data.response.songs).first();
+        },
         getTrackFIDFromCatalog: function (catalog) {
             if (!this.has("tracks")) {
                 return null;
@@ -64,51 +106,39 @@
             return EchoNest.RosettaID.toSpotifyTrackID(this.getSpotifyTrackFID());
         }
     });
+    // add deferred fetching
+    _.extend(EchoNest.SongModel.prototype, DeferredFetching.prototype);
 
     EchoNest.StaticPlaylist = Backbone.Collection.extend({
         model: EchoNest.SongModel,
         initialize: function(models, options) {
             if (options && options.playlistParams) {
-                this.setPlaylistParams(options.playlistParams);
+                this.playlistParams = options.playlistParams;
             }
         },
         url: function () {
-            return endpoint + '/playlist/static' + queryStringFromParams(this.playlistParams);
+            return endpoint + '/playlist/static' + queryStringFromParams(_.defaults(this.playlistParams, {
+                api_key: apiKey,
+                // required for cross-domain requests
+                format: 'jsonp',
+                // return spotify tracks, acoustic metadata, and ranking by default
+                bucket: ['id:spotify-US', 'tracks', 'audio_summary', 'song_hotttnesss'],
+                // limit results to specified catl
+                limit: true
+            }));
         },
         parse: function(json) {
             return json.response.songs;
         },
-        deferredFetch: function (options) {
-            var deferred = new $.Deferred();
-            this.fetch(_.extend(options || {}, {
-                success: deferred.resolve.bind(deferred),
-                error: deferred.reject.bind(deferred)
-            }));
-            return deferred.promise();
-        },
         fetch: function(options) {
             if (options && options.playlistParams) {
-                this.setPlaylistParams(options.playlistParams);
+                this.playlistParams = options.playlistParams;
             }
             return Backbone.Collection.prototype.fetch.call(this, _.defaults(options || {}, {
                 // required for cross-domain requests
                 dataType: 'jsonp',
                 callback: 'callback'
             }));
-        },
-        setPlaylistParams: function(params) {
-            this.playlistParams = _.defaults(params, {
-                api_key: apiKey,
-
-                // required for cross-domain requests
-                format: 'jsonp',
-
-                // return spotify tracks, acoustic metadata, and ranking by default
-                bucket: ['id:spotify-US', 'tracks', 'audio_summary', 'song_hotttnesss'],
-
-                // limit results to specified catl
-                limit: true
-            });
         },
         getSpotifyTrackIDs: function () {
             return _.reduce(this.models, function(memo, songModel) {
@@ -120,4 +150,6 @@
             }, []);
         }
     });
+    // add deferred fetching
+    _.extend(EchoNest.StaticPlaylist.prototype, DeferredFetching.prototype);
 })(this);
