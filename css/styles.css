@@ -200,10 +200,19 @@ p.artist {
 	padding: 10px 15px;
 	position: relative;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 #segment-container .results li:nth-child(odd) {
 	background: rgba(0,0,0,0.02);
+}
+
+#segment-container .results li:hover {
+	background: rgba(0,0,0,0.2)!important;
+}
+
+.stage-container {
+	margin: 10px 0px;
 }
 
 .loadingIndicator {
