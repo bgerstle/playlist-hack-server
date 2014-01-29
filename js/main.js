@@ -126,18 +126,18 @@ var SearchFormView = Backbone.View.extend({
     },
     search: function (e) {
         var params = _.defaults(this.serialize(), defaultParams);
-        this.trigger('searchStarted', params);
+        this.trigger('search:started', params);
         return this.model.deferredFetch({
             playlistParams: params,
             reset: true,
             silet: false
         }).done(function (collection, response, options) {
-            this.trigger('searchFinished');
+            this.trigger('search:finished');
             console.log("fetch response:");
             console.log(response);
         }.bind(this))
         .fail(function (collection, response, options) {
-            this.trigger('searchFailed');
+            this.trigger('search:failed');
             alert(JSON.stringify(response));
         }.bind(this));
     }
@@ -189,8 +189,13 @@ defaultSearchView.search();
 
 var defaultListView = new SongListView({
     el: $('#playlist'),
-    model: defaultPlaylist
+    model: defaultPlaylist,
+    searchView: defaultSearchView
 });
 defaultListView.render();
+
+var $loadingIndicator = $('.loadingIndicator');
+defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
+defaultSearchView.on('search:finished search:failed', $loadingIndicator.fadeOut, $loadingIndicator);
 
 });

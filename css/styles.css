@@ -21,6 +21,13 @@ body {
     margin-top: 5px;
 }
 
+.loadingIndicator {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
 #playlist {
     width: 50%;
     height: 100%;
