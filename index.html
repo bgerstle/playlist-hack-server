@@ -20,6 +20,7 @@
     <!-- TODO: load asynchronously from a separate file -->
 
     <script type="text/template" id="searchResults-template">
+
       <div class="stage-container">
         <ul class="results">
           <% _.each(songs, function (song) { %>
@@ -46,7 +47,6 @@
       <div id="warmup" class="stage">
         <h1>Warmup</h1>
           <div class="stage-module-container">
-          <div class="loadingIndicator">Loading...</div>
             <div class="search">
                 <div>
                     <select class="searchType">
@@ -68,6 +68,9 @@
                 <div>
                     <button type="button" class="search">Search</button>
                 </div>
+            </div>
+            <div class="loadingIndicator">
+	            <div class="eq-spinner"><i /></div>
             </div>
             <div class="searchResults"></div>
           </div>
