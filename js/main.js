@@ -28,13 +28,15 @@ var defaultParams = {
         target_tempo: 60
 };
 
-var playlist = new EchoNest.StaticPlaylist([],{
-    comparator: function (a, b) {
-        return b.get("audio_summary").energy - a.get("audio_summary").energy;
-    }
-});
+/////////////////////////////////////
+// Declare main classes for the UI...
+/////////////////////////////////////
 
-var SearchForm = Backbone.View.extend({
+/*
+ View which contains controls which allow the user to specify parameters for
+ and execute a search.
+ */
+var SearchFormView = Backbone.View.extend({
     initialize: function (opts) {
         this.$addField = this.$('#addField');
         this.$removeField = this.$('#removeField');
@@ -125,7 +127,7 @@ var SearchForm = Backbone.View.extend({
     search: function (e) {
         var params = _.defaults(this.serialize(), defaultParams);
         this.trigger('searchStarted', params);
-        return playlist.deferredFetch({
+        return this.model.deferredFetch({
             playlistParams: params,
             reset: true,
             silet: false
@@ -141,14 +143,10 @@ var SearchForm = Backbone.View.extend({
     }
 });
 
-var searchView = new SearchForm({
-    el: $('#search'),
-    model: playlist
-});
-searchView.render();
-searchView.search();
-
-var SongList = Backbone.View.extend({
+/*
+ Lists the responses for a specific search.
+ */
+var SongListView = Backbone.View.extend({
     initialize: function (options) {
         // re-render when collection syncs
         this.model.on('sync', this.render.bind(this));
@@ -172,10 +170,27 @@ var SongList = Backbone.View.extend({
     }
 });
 
-var defaultList = new SongList({
-    el: $('#playlist'),
-    model: playlist
+///////////////////////////////
+// Put all the pieces together
+///////////////////////////////
+
+var defaultPlaylist = new EchoNest.StaticPlaylist([],{
+    comparator: function (a, b) {
+        // sort by song energy, descending
+        return b.get("audio_summary").energy - a.get("audio_summary").energy;
+    }
 });
-defaultList.render();
+var defaultSearchView = new SearchFormView({
+    el: $('#search'),
+    model: defaultPlaylist
+});
+defaultSearchView.render();
+defaultSearchView.search();
+
+var defaultListView = new SongListView({
+    el: $('#playlist'),
+    model: defaultPlaylist
+});
+defaultListView.render();
 
 });
