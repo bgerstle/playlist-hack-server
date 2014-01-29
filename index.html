@@ -26,10 +26,10 @@
             <a class="song-result" href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
             <a href="#" class="more-song-info">Song Summary<span></span></a>
             <div class="song-summary-container">
-              <div class="song-summary-tempo"><%= song.audio_summary.tempo %></div>
-              <div class="song-summary-energy"><%= song.audio_summary.energy %></div>
-              <div class="song-summary-danceability"><%= song.audio_summary.danceability %></div>
-              <div class="song-summary-hotttnesss"><%= song.audio_summary.song_hotttnesss %></div>
+              <div class="song-summary-tempo"><span>Tempo: </span> <%= song.audio_summary.tempo %></div>
+              <div class="song-summary-energy"><span>Energy: </span> <%= song.audio_summary.energy %></div>
+              <div class="song-summary-danceability"><span>Danceability:</span> <%= song.audio_summary.danceability %></div>
+              <div class="song-summary-hotttnesss"><span>Hotttnesss:</span> <%= song.audio_summary.song_hotttnesss %></div>
             </div>
           </li>
           <% }); %>
