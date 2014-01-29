@@ -34,8 +34,10 @@ $(document).delegate('.more-song-info', 'click', showSongSummary);
 function showSongSummary(e) {
     if (!$(this).next('.song-summary-container').hasClass('selected')) {
         $(this).next('.song-summary-container').addClass('selected');
+        $(this).html('-').css('padding', '0px 8px');
     } else {
         $(this).next('.song-summary-container').removeClass('selected');
+        $(this).html('+').css('padding', '0px 7px');
     }
 }
 
