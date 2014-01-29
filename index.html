@@ -5,7 +5,7 @@
     <!-- Includes -->
     <script type="text/javascript" src="js/lib/underscore_dev.js"></script>
     <script type="text/javascript" src="js/lib/jquery_dev.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/lib/backbone_dev.js"></script>
 
     <!-- Styles -->
@@ -24,13 +24,13 @@
         <ul class="results">
           <% _.each(songs, function (song) { %>
           <li>
-            <a class="song-result" href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
+            <a class="song-result" href="" modelID=<%= song.id %>><%= song.title %></a> <p class="artist"> <%= song.artist_name %></p>
             <a href="#" class="more-song-info">+</a>
             <div class="song-summary-container">
               <div class="song-summary-tempo"><span>Tempo: </span> <%= song.audio_summary.tempo %></div>
               <div class="song-summary-energy"><span>Energy: </span> <%= song.audio_summary.energy %></div>
               <div class="song-summary-danceability"><span>Danceability:</span> <%= song.audio_summary.danceability %></div>
-              <div class="song-summary-hotttnesss"><span>Hotttnesss:</span> <%= song.audio_summary.song_hotttnesss %></div>
+              <div class="song-summary-hotttnesss"><span>Hotttnesss:</span> <%= song.song_hotttnesss %></div>
             </div>
           </li>
           <% }); %>
@@ -44,31 +44,33 @@
     <iframe id="preview"></iframe>
     <div id="segment-container">
 	    <div id="warmup" class="stage">
-	      <div class="loadingIndicator">Loading...</div>
 	      <h1>Warmup</h1>
-	        <div class="search">
-	            <div>
-	                <select>
-                      <option name="type" value="song-radio">Song Radio</option>
-	                    <option name="type" value="artist-radio" selected>Artist Radio</option>
-	                    <option name="type" value="artist">Artist</option>
-	                    <option name="type" value="genre-radio">Genre</option>
-	                </select>
-	            </div>
-	            <div class="searchFieldContainer">
-	            </div>
-	            <div>
-	                <button type="button" class="removeField" disabled>-</button>
-	                <button type="button" class="addField">+</button>
-	            </div>
-	            <div>
-	                <!-- Add advanced search options -->
-	            </div>
-	            <div>
-	                <button type="button" class="search">Search</button>
-	            </div>
+	        <div class="stage-module-container">
+	        <div class="loadingIndicator">Loading...</div>
+		        <div class="search">
+		            <div>
+		                <select>
+	                      <option name="type" value="song-radio">Song Radio</option>
+		                    <option name="type" value="artist-radio" selected>Artist Radio</option>
+		                    <option name="type" value="artist">Artist</option>
+		                    <option name="type" value="genre-radio">Genre</option>
+		                </select>
+		            </div>
+		            <div class="searchFieldContainer">
+		            </div>
+		            <div>
+		                <button type="button" class="removeField" disabled>-</button>
+		                <button type="button" class="addField">+</button>
+		            </div>
+		            <div>
+		                <!-- Add advanced search options -->
+		            </div>
+		            <div>
+		                <button type="button" class="search">Search</button>
+		            </div>
+		        </div>
+		        <div class="searchResults"></div>
 	        </div>
-	        <div class="searchResults"></div>
 	    </div>
 	  </div>
 </body>

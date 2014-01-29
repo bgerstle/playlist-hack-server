@@ -41,6 +41,8 @@ function showSongSummary(e) {
     }
 }
 
+$('.stage-module-container').css('height', $(window).height() - 200);
+
 /////////////////////////////////////
 // Declare main classes for the UI...
 /////////////////////////////////////
@@ -232,13 +234,13 @@ var defaultPlaylist = new EchoNest.StaticPlaylist([],{
     }
 });
 var defaultSearchView = new SearchFormView({
-    el: $('#warmup > .search'),
+    el: $('#warmup .search'),
     model: defaultPlaylist
 });
 defaultSearchView.render();
 
 var searchResultsView = new SearchResultView({
-    el: $('#warmup > .searchResults'),
+    el: $('#warmup .searchResults'),
     model: defaultPlaylist,
     searchView: defaultSearchView
 });

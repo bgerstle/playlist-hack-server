@@ -102,6 +102,8 @@ table {
     font-style: normal;
 }
 
+/* General Styles*/
+
 body {
     width: 100%;
     height: 100%;
@@ -117,15 +119,32 @@ a {
 	text-decoration: none;
 }
 
+/* Segments */
+
+.stage h1 {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.stage-module-container {
+	background: #fff;
+	border-radius: 15px;
+	border: 1px solid #ccc;
+	float: left;
+	width: 300px;
+	overflow: scroll;
+}
+
 a.more-song-info {
 	font-size: 12px;
-	color: #000;
-	background: #84bd00;
-	line-height: 20px;
-	display: inline-block;
-	padding: 0px 7px;
-	border-radius: 17px;
-	margin-left: 10px;
+color: #000;
+background: #84bd00;
+line-height: 20px;
+padding: 0px 7px;
+border-radius: 17px;
+position: absolute;
+right: 15px;
+top: 15px;
 }
 
 a.more-song-info span {
@@ -137,14 +156,32 @@ a.more-song-info span {
 	padding: 0 0 0 10px;
 }
 
+a.song-result {
+	white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+height: 20px;
+display: block;
+padding-right: 30px;
+}
+
+p.artist {
+	font-size: 12px;
+}
+
 .song-summary-container {
 	height: 0px;
 	overflow: hidden;
 	-webkit-transition: 250ms ease;
+	font-size: 12px;
+}
+
+.song-summary-container .song-summary-tempo {
+	padding-top: 10px;
 }
 
 .song-summary-container.selected {
-	height: auto;
+	height: 58px;
 }
 
 #heading {
@@ -160,7 +197,13 @@ a.more-song-info span {
 }
 
 #segment-container .results li {
-	padding: 5px 0px;
+	padding: 10px 15px;
+	position: relative;
+	overflow: hidden;
+}
+
+#segment-container .results li:nth-child(odd) {
+	background: rgba(0,0,0,0.02);
 }
 
 .loadingIndicator {
