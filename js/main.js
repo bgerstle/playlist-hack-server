@@ -291,7 +291,7 @@ var defaultPlaylist = new EchoNest.StaticPlaylist([],{
     }
 });
 var defaultSearchView = new SearchFormView({
-    el: $('#warmup .search'),
+    el: $('#warmup .search-container'),
     model: defaultPlaylist
 });
 defaultSearchView.addField();
