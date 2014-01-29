@@ -41,7 +41,7 @@ function showSongSummary(e) {
     }
 }
 
-$('.stage-module-container').css('height', $(window).height() - 200);
+$('.searchResults').css('height', $(window).height() - 300);
 
 /////////////////////////////////////
 // Declare main classes for the UI...
