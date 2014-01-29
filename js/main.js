@@ -146,13 +146,13 @@ var SearchFormView = Backbone.View.extend({
 /*
  Lists the responses for a specific search.
  */
-var SongListView = Backbone.View.extend({
+var SearchResultView = Backbone.View.extend({
     initialize: function (options) {
         // re-render when collection syncs
         this.model.on('sync', this.render.bind(this));
     },
     template: function () {
-        return _.template($('#playlist-template').html(), {songs: this.model.toJSON()});
+        return _.template($('#searchResults-template').html(), {songs: this.model.toJSON()});
     },
     render: function () {
         this.$el.html(this.template());
@@ -187,12 +187,12 @@ var defaultSearchView = new SearchFormView({
 defaultSearchView.render();
 defaultSearchView.search();
 
-var defaultListView = new SongListView({
-    el: $('#playlist'),
+var searchResultsView = new SearchResultView({
+    el: $('#searchResults'),
     model: defaultPlaylist,
     searchView: defaultSearchView
 });
-defaultListView.render();
+searchResultsView.render();
 
 var $loadingIndicator = $('.loadingIndicator');
 defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);

@@ -8,7 +8,7 @@ body {
 #search {
     top: 0;
     left: 0;
-    width: 50%; /*should be same as playlist*/
+    width: 50%; /*should be same as searchResults*/
 }
 
 #search > div {
@@ -28,7 +28,7 @@ body {
     background-color: rgba(0,0,0,0.5);
 }
 
-#playlist {
+#searchResults {
     width: 50%;
     height: 100%;
 }
