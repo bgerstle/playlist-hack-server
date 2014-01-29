@@ -45,16 +45,38 @@ function showSongSummary(e) {
 // Declare main classes for the UI...
 /////////////////////////////////////
 
+ /*
+  View which accepts text from the user that specifies an artist or genre seed
+ */
+ var ArtistGenreSearchField = Backbone.View.extend({
+    tagName: "input",
+    className: "searchField",
+    attributes: {
+        type: "text"
+    },
+    initialize: function (opts) {
+        // setup autocomplete
+    },
+    serialize: function () {
+        return this.$el.val();
+    }
+ });
+
 /*
  View which contains controls which allow the user to specify parameters for
  and execute a search.
  */
 var BaseSearchFormView = Backbone.View.extend({
+    fieldClass: function () {
+        return ArtistGenreSearchField;
+    },
     initialize: function (opts) {
+        this.subviews = [];
         this.$addFieldButton = this.$('button.addField');
         this.$removeFieldButton = this.$('button.removeField');
         this.$fieldContainer = this.$('.searchFieldContainer');
-        this.maxFields = this.$fieldContainer.find('div').size();
+        this.$searchButton = this.$('button.search');
+        this.maxFields = 5;
     },
     events: function () {
         return {
@@ -64,6 +86,21 @@ var BaseSearchFormView = Backbone.View.extend({
             "click button.search": 'search'
         };
     },
+    reset: function () {
+        this.$fieldContainer.empty();
+    },
+    render: function () {
+        _.each(this.subviews, _.bind(function (subview) {
+            if ($.contains(this.$fieldContainer, subview.el)) {
+                return;
+            }
+            this.$fieldContainer.append(subview.$el);
+        }, this));
+
+        this.$addFieldButton.prop("disabled", this.subviews.length === this.maxFields);
+        this.$removeFieldButton.prop("disabled", this.subviews.length <= 1);
+        this.$searchButton.prop("disabled", this.subviews.length === 0);
+    },
     searchFieldChanged: function (event) {
         if (event.which === 13) {
             event.preventDefault();
@@ -72,48 +109,25 @@ var BaseSearchFormView = Backbone.View.extend({
         }
         return true;
     },
-    getSearchFields: function () {
-        return this.$fieldContainer.find("input.searchField");
-    },
     addField: function (event) {
-        var $existingFields = this.getSearchFields();
-        var numFields = $existingFields.size();
-        if (numFields === this.maxFields) {
+        if (this.subviews.length === this.maxFields) {
             return;
         }
 
-        var $lastField = $existingFields.last();
-        var $newField = $lastField.clone();
-        $newField.val('');
-        var $nextDiv = $lastField.parent().next('div');
-        $nextDiv.append($newField);
-        $newField.focus();
-        numFields++;
-
-        if (numFields === this.maxFields) {
-            this.$addFieldButton.prop('disabled', true);
-        }
-        if (numFields >= 1) {
-            this.$removeFieldButton.prop('disabled', false);
-        }
+        var fieldClass = _.result(this, "fieldClass");
+        var newSubview = new fieldClass();
+        newSubview.render();
+        this.subviews.push(newSubview);
+        this.render();
     },
     removeField: function(event) {
-        var $existingFields = this.getSearchFields();
-        var numFields = $existingFields.size();
-        if (numFields === 1) {
+        if (this.subviews.length === 1) {
             return;
         }
 
-        $existingFields.last().detach();
-        numFields--;
-
-        if (numFields < 2) {
-            // going down to 1 field, don't remove more
-            this.$removeFieldButton.prop('disabled', true);
-        } else if (numFields < this.maxFields) {
-            // removing the 5th field, enable addition
-            this.$addFieldButton.prop('disabled', false);
-        }
+        var lastSubview = this.subviews.pop();
+        lastSubview.remove();
+        this.render();
     },
     getSearchType: function () {
         return this.$(":checked[name='type']").val();
@@ -137,14 +151,9 @@ var BaseSearchFormView = Backbone.View.extend({
         return encodeURIComponent(value);
     },
     getEncodedSeedValues: function () {
-        return _.reduce(this.$("input.searchField"), _.bind(function (memo, el) {
-            // ignore empty fields
-            var value = $(el).val();
-            if (value) {
-                memo.push(this.encodeSeedValue(value));
-            }
-            return memo;
-        }, this), []);
+        return _.chain(this.subviews).map(function (subview) {
+            return subview.serialize();
+        }).map(this.encodeSeedValue).value();
     },
     serialize: function () {
         var params = {type: this.getSearchType()};
@@ -175,26 +184,13 @@ var SearchFormView = BaseSearchFormView.extend({
     initialize: function (opts) {
         BaseSearchFormView.prototype.initialize.call(this, opts);
         this.maybeValidateSearchField = _.debounce(this.maybeValidateSearchField, 500);
+        this.songSearches = {};
+        this.songIDs = [];
     },
     getSearchTypeToSeedKeyMap: function () {
         return _.extend(BaseSearchFormView.prototype.getSearchTypeToSeedKeyMap.call(this), {
             'song-radio': 'song_id'
         });
-    },
-    searchFieldChanged: function (e) {
-        var preventDefault = BaseSearchFormView.prototype.searchFieldChanged.call(this, e);
-        if (preventDefault === false) {
-            return preventDefault;
-        }
-        if (this.getSearchType() === 'song-radio') {
-            this.maybeValidateSearchField($(e.target));
-        }
-        return true;
-    },
-    maybeValidateSearchField: function ($target) {
-        if ($target.hasClass('pendingValidation')) {
-            return;
-        }
     }
 });
 
@@ -240,7 +236,6 @@ var defaultSearchView = new SearchFormView({
     model: defaultPlaylist
 });
 defaultSearchView.render();
-defaultSearchView.search();
 
 var searchResultsView = new SearchResultView({
     el: $('#warmup > .searchResults'),
