@@ -26,7 +26,7 @@
         <th>Hotttnesss</th>
         <% _.each(songs, function (song) { %>
             <tr>
-                <td><a href="" modelID=<%= song.id %>><%= song.title %></a> — <%= song.artist_name %></td>
+                <td><a href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %></td>
                 <td><%= song.audio_summary.tempo %></td>
                 <td><%= song.audio_summary.energy %></td>
                 <td><%= song.audio_summary.danceability %></td>
