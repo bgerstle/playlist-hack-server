@@ -32,12 +32,11 @@ var defaultPlaylistParams = {
 $(document).delegate('.more-song-info', 'click', showSongSummary);
 
 function showSongSummary(e) {
-  if (!$(this).next('.song-summary-container').hasClass('selected')) {
-	  $(this).next('.song-summary-container').addClass('selected');
-  } else {
-	  $(this).next('.song-summary-container').removeClass('selected');
-  }
-
+    if (!$(this).next('.song-summary-container').hasClass('selected')) {
+        $(this).next('.song-summary-container').addClass('selected');
+    } else {
+        $(this).next('.song-summary-container').removeClass('selected');
+    }
 }
 
 /////////////////////////////////////
@@ -59,8 +58,8 @@ var BaseSearchFormView = Backbone.View.extend({
         return {
             'click .addField': 'addField',
             'click .removeField': 'removeField',
-            'keypress input.searchField': 'searchFieldChanged',
-            "click button[name='search']": 'search'
+            'keyup input.searchField': 'searchFieldChanged',
+            "click button.search": 'search'
         };
     },
     searchFieldChanged: function (event) {
@@ -136,14 +135,14 @@ var BaseSearchFormView = Backbone.View.extend({
         return encodeURIComponent(value);
     },
     getEncodedSeedValues: function () {
-        return _.reduce(this.$("input.searchField"), function (memo, el) {
+        return _.reduce(this.$("input.searchField"), _.bind(function (memo, el) {
             // ignore empty fields
             var value = $(el).val();
             if (value) {
                 memo.push(this.encodeSeedValue(value));
             }
             return memo;
-        }, []);
+        }, this), []);
     },
     serialize: function () {
         var params = {type: this.getSearchType()};
@@ -171,10 +170,9 @@ var BaseSearchFormView = Backbone.View.extend({
 });
 
 var SearchFormView = BaseSearchFormView.extend({
-    events: function () {
-        return _.extend(BaseSearchFormView.prototype.events.call(this), {
-
-        });
+    initialize: function (opts) {
+        BaseSearchFormView.prototype.initialize.call(this, opts);
+        this.maybeValidateSearchField = _.debounce(this.maybeValidateSearchField, 500);
     },
     getSearchTypeToSeedKeyMap: function () {
         return _.extend(BaseSearchFormView.prototype.getSearchTypeToSeedKeyMap.call(this), {
@@ -187,12 +185,14 @@ var SearchFormView = BaseSearchFormView.extend({
             return preventDefault;
         }
         if (this.getSearchType() === 'song-radio') {
-            this.maybeValidateSearchField(e.target);
+            this.maybeValidateSearchField($(e.target));
         }
         return true;
     },
-    maybeValidateSearchField: function (target) {
-
+    maybeValidateSearchField: function ($target) {
+        if ($target.hasClass('pendingValidation')) {
+            return;
+        }
     }
 });
 

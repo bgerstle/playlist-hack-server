@@ -59,36 +59,6 @@
     };
 
     EchoNest.SongModel = Backbone.Model.extend({
-        initialize: function (attrs, options) {
-            if (options && options.songParams) {
-                this.songParams = options.songParams;
-            }
-        },
-        url: function () {
-            return endpoint + '/song/search/' + queryStringFromParams(_.defaults(this.songParams || {}, {
-                api_key: apiKey,
-                // required for cross-domain requests
-                format: 'jsonp'
-            }));
-        },
-        fetch: function (options) {
-            if (options && options.songParams) {
-                this.songParams = options.songParams;
-            }
-            return Backbone.Model.prototype.fetch.call(this, _.defaults(options || {}, {
-                // required for cross-domain requests
-                dataType: 'jsonp',
-                callback: 'callback'
-            }));
-        },
-        parse: function (data) {
-            if (this.collection) {
-                // if we're part of the collection, assume we're being passed the song JSON object directly
-                return data;
-            }
-            // otherwise, we need to grab an object out of the "songs" field
-            return _(data.response.songs).first();
-        },
         getTrackFIDFromCatalog: function (catalog) {
             if (!this.has("tracks")) {
                 return null;
@@ -106,8 +76,37 @@
             return EchoNest.RosettaID.toSpotifyTrackID(this.getSpotifyTrackFID());
         }
     });
+
+    EchoNest.SearchSongModel = Backbone.Collection.extend({
+        model: EchoNest.SongModel,
+        initialize: function (attrs, options) {
+            if (options && options.songParams) {
+                this.songParams = options.songParams;
+            }
+        },
+        url: function () {
+            return endpoint + '/song/search/' + queryStringFromParams(_.defaults(this.songParams || {}, {
+                api_key: apiKey,
+                // required for cross-domain requests
+                format: 'jsonp'
+            }));
+        },
+        fetch: function (options) {
+            if (options && options.songParams) {
+                this.songParams = options.songParams;
+            }
+            return Backbone.Collection.prototype.fetch.call(this, _.defaults(options || {}, {
+                // required for cross-domain requests
+                dataType: 'jsonp',
+                callback: 'callback'
+            }));
+        },
+        parse: function (data) {
+            return data.response.songs;
+        }
+    });
     // add deferred fetching
-    _.extend(EchoNest.SongModel.prototype, DeferredFetching.prototype);
+    _.extend(EchoNest.SearchSongModel.prototype, DeferredFetching.prototype);
 
     EchoNest.StaticPlaylist = Backbone.Collection.extend({
         model: EchoNest.SongModel,
