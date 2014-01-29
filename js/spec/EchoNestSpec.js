@@ -7,9 +7,12 @@ describe("Test fetching songs from EchoNest", function () {
                 artist: "Michael Jackson",
                 results: 1
             }
-        }).always(function (collection, json, options) {
+        }).always(function (model, json, options) {
             expect(json.response.status.code).toBe(0);
-            expect(songModel.get("artist_name")).toBe("Michael Jackson");
+            expect(model.get("id")).toBeTruthy();
+            expect(model.get("id")).toEqual(songModel.get("id"));
+            expect(model.get("title")).toBe("Billie Jean");
+            expect(model.get("artist_name")).toBe("Michael Jackson");
             done();
         });
     });

@@ -15,7 +15,7 @@ playbuttonModel.set({
 
 $('body').append(playbuttonView.el);
 
-var defaultParams = {
+var defaultPlaylistParams = {
         sort: 'energy-desc',
         song_selection: 'energy-top',
         song_type: 'studio',
@@ -48,12 +48,12 @@ function showSongSummary(e) {
  View which contains controls which allow the user to specify parameters for
  and execute a search.
  */
-var SearchFormView = Backbone.View.extend({
+var BaseSearchFormView = Backbone.View.extend({
     initialize: function (opts) {
         this.$addField = this.$('.addField');
         this.$removeField = this.$('.removeField');
         this.$fieldContainer = this.$('.searchFieldContainer');
-        this.maxFields = opts && opts.maxFields ? opts.maxFields : 5;
+        this.maxFields = this.$fieldContainer.find('div').size();
     },
     events: function () {
         return {
@@ -68,7 +68,9 @@ var SearchFormView = Backbone.View.extend({
         if (event.which === 13) {
             event.preventDefault();
             this.search();
+            return false;
         }
+        return true;
     },
     getSearchFields: function () {
         return this.$fieldContainer.find("input.searchField");
@@ -80,9 +82,11 @@ var SearchFormView = Backbone.View.extend({
             return;
         }
 
-        var $newField = $existingFields.first().clone();
+        var $lastField = $existingFields.last();
+        var $newField = $lastField.clone();
         $newField.val('');
-        this.$fieldContainer.append($newField);
+        var $nextDiv = $lastField.parent().next('div');
+        $nextDiv.append($newField);
         numFields++;
 
         if (numFields === this.maxFields) {
@@ -113,18 +117,20 @@ var SearchFormView = Backbone.View.extend({
     getSearchType: function () {
         return this.$(":checked[name='type']").val();
     },
+    getSearchTypeToSeedKeyMap: function () {
+        return {
+            'artist': 'artist',
+            'artist-radio': 'artist',
+            'genre-radio': 'genre'
+        };
+    },
     getSeedKeyForSearchType: function (type) {
         var seedFieldName;
-        switch (type) {
-          case 'artist':
-          case 'artist-radio':
-            return 'artist';
-          case 'genre-radio':
-            return 'genre';
-          default:
-            throw "Unexpected search type: " + type;
-
+        var map = this.getSearchTypeToSeedKeyMap();
+        if (_.has(map, type)) {
+            return map[type];
         }
+        throw "Unexpected search type: " + type;
     },
     getEncodedSeedValues: function () {
         return _.map(this.$("input.searchField"), function (el) {
@@ -138,21 +144,47 @@ var SearchFormView = Backbone.View.extend({
         return params;
     },
     search: function (e) {
-        var params = _.defaults(this.serialize(), defaultParams);
+        var params = _.defaults(this.serialize(), defaultPlaylistParams);
         this.trigger('search:started', params);
         return this.model.deferredFetch({
             playlistParams: params,
             reset: true,
             silet: false
-        }).done(function (collection, response, options) {
+        }).done(_.bind(function (collection, response, options) {
             this.trigger('search:finished');
             console.log("fetch response:");
             console.log(response);
-        }.bind(this))
-        .fail(function (collection, response, options) {
+        }, this))
+        .fail(_.bind(function (collection, response, options) {
             this.trigger('search:failed');
             alert(JSON.stringify(response));
-        }.bind(this));
+        }, this));
+    }
+});
+
+var SearchFormView = BaseSearchFormView.extend({
+    events: function () {
+        return _.extend(BaseSearchFormView.prototype.events.call(this), {
+
+        });
+    },
+    getSearchTypeToSeedKeyMap: function () {
+        return _.extend(BaseSearchFormView.prototype.getSearchTypeToSeedKeyMap.call(this), {
+            'song-radio': 'song_id'
+        });
+    },
+    searchFieldChanged: function (e) {
+        var preventDefault = BaseSearchFormView.prototype.searchFieldChanged.call(this, e);
+        if (preventDefault === false) {
+            return preventDefault;
+        }
+        if (this.getSearchType() === 'song-radio') {
+            this.maybeValidateSearchField(e.target);
+        }
+        return true;
+    },
+    maybeValidateSearchField: function (target) {
+
     }
 });
 
