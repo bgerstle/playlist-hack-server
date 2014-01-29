@@ -23,7 +23,7 @@
         <ul class="results">
           <% _.each(songs, function (song) { %>
           <li>
-            <a href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
+            <a class="song-result" href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
             <a href="#" class="more-song-info">Song Summary<span></span></a>
             <div class="song-summary-container">
               <div class="song-summary-tempo"><%= song.audio_summary.tempo %></div>

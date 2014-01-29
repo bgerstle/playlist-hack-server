@@ -172,7 +172,7 @@ var SearchResultView = Backbone.View.extend({
     },
     events: function () {
         return {
-            'click a': 'preview'
+            'click a.song-result': 'preview'
         };
     },
     preview: function (e) {
