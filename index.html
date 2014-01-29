@@ -17,7 +17,28 @@
 
     <!-- Templates -->
     <!-- TODO: load asynchronously from a separate file -->
+
     <script type="text/template" id="searchResults-template">
+      <div class="stage-container">
+        <ul>
+          <% _.each(songs, function (song) { %>
+          <li>
+            <a href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
+            <div class="song-summary-container">
+              <div class="song-summary-tempo"><%= song.audio_summary.tempo %></div>
+              <div class="song-summary-energy"><%= song.audio_summary.energy %></div>
+              <div class="song-summary-danceability"><%= song.audio_summary.danceability %></div>
+              <div class="song-summary-hotttnesss"><%= song.audio_summary.song_hotttnesss %></div>
+            </div>
+          </li>
+          <% }); %>
+         </ul>
+        </div>
+      </div>
+
+
+
+    <!--
         <table>
         <th>Song</th>
         <th>Tempo</th>
@@ -33,36 +54,39 @@
                 <td><%= song.song_hotttnesss %></td>
             </tr>
         <% }); %>
-        </table>
+        </table> -->
     </script>
 </head>
 <body>
+    <div id="heading">| Workout Playlist Generator</div>
     <iframe id="preview"></iframe>
-    <div id="warmup">
-        <div class="search">
-            <div>
-                <select>
-                    <option name="type" value="artist-radio" selected>Artist Radio</option>
-                    <option name="type" value="artist">Artist</option>
-                    <option name="type" value="genre-radio">Genre</option>
-                </select>
-            </div>
-            <div class="searchFieldContainer">
-                <input type="text" class="searchField" value="Michael Jackson"></input>
-            </div>
-            <div>
-                <button type="button" class="removeField" disabled>-</button>
-                <button type="button" class="addField">+</button>
-            </div>
-            <div>
-                <!-- Add advanced search options -->
-            </div>
-            <div>
-                <button type="button" name="search">Search</button>
-            </div>
-        </div>
-        <div class="loadingIndicator">Loading...</div>
-        <div class="searchResults"></div>
-    </div>
+    <div id="segment-container">
+	    <div id="warmup" class="stage">
+	      <div class="loadingIndicator">Loading...</div>
+	        <div class="search">
+	            <div>
+	                <select>
+	                    <option name="type" value="artist-radio" selected>Artist Radio</option>
+	                    <option name="type" value="artist">Artist</option>
+	                    <option name="type" value="genre-radio">Genre</option>
+	                </select>
+	            </div>
+	            <div class="searchFieldContainer">
+	                <input type="text" class="searchField" value="Michael Jackson"></input>
+	            </div>
+	            <div>
+	                <button type="button" class="removeField" disabled>-</button>
+	                <button type="button" class="addField">+</button>
+	            </div>
+	            <div>
+	                <!-- Add advanced search options -->
+	            </div>
+	            <div>
+	                <button type="button" name="search">Search</button>
+	            </div>
+	        </div>
+	        <div class="searchResults"></div>
+	    </div>
+	  </div>
 </body>
 </html>

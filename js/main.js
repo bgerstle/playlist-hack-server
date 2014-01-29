@@ -194,7 +194,7 @@ var searchResultsView = new SearchResultView({
 });
 searchResultsView.render();
 
-var $loadingIndicator = $('#warmup > .loadingIndicator');
+var $loadingIndicator = $('.loadingIndicator');
 defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
 defaultSearchView.on('search:finished search:failed', $loadingIndicator.fadeOut, $loadingIndicator);
 
