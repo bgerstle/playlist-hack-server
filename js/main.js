@@ -50,8 +50,8 @@ function showSongSummary(e) {
  */
 var BaseSearchFormView = Backbone.View.extend({
     initialize: function (opts) {
-        this.$addField = this.$('.addField');
-        this.$removeField = this.$('.removeField');
+        this.$addFieldButton = this.$('button.addField');
+        this.$removeFieldButton = this.$('button.removeField');
         this.$fieldContainer = this.$('.searchFieldContainer');
         this.maxFields = this.$fieldContainer.find('div').size();
     },
@@ -63,7 +63,6 @@ var BaseSearchFormView = Backbone.View.extend({
             "click button[name='search']": 'search'
         };
     },
-
     searchFieldChanged: function (event) {
         if (event.which === 13) {
             event.preventDefault();
@@ -87,13 +86,14 @@ var BaseSearchFormView = Backbone.View.extend({
         $newField.val('');
         var $nextDiv = $lastField.parent().next('div');
         $nextDiv.append($newField);
+        $newField.focus();
         numFields++;
 
         if (numFields === this.maxFields) {
-            this.$addField.prop('disabled', true);
+            this.$addFieldButton.prop('disabled', true);
         }
         if (numFields >= 1) {
-            this.$removeField.prop('disabled', false);
+            this.$removeFieldButton.prop('disabled', false);
         }
     },
     removeField: function(event) {
@@ -108,10 +108,10 @@ var BaseSearchFormView = Backbone.View.extend({
 
         if (numFields < 2) {
             // going down to 1 field, don't remove more
-            this.$removeField.prop('disabled', true);
+            this.$removeFieldButton.prop('disabled', true);
         } else if (numFields < this.maxFields) {
             // removing the 5th field, enable addition
-            this.$addField.prop('disabled', false);
+            this.$addFieldButton.prop('disabled', false);
         }
     },
     getSearchType: function () {
@@ -132,10 +132,18 @@ var BaseSearchFormView = Backbone.View.extend({
         }
         throw "Unexpected search type: " + type;
     },
+    encodeSeedValue: function (value) {
+        return encodeURIComponent(value);
+    },
     getEncodedSeedValues: function () {
-        return _.map(this.$("input.searchField"), function (el) {
-            return encodeURIComponent($(el).val());
-        });
+        return _.reduce(this.$("input.searchField"), function (memo, el) {
+            // ignore empty fields
+            var value = $(el).val();
+            if (value) {
+                memo.push(this.encodeSeedValue(value));
+            }
+            return memo;
+        }, []);
     },
     serialize: function () {
         var params = {type: this.getSearchType()};
