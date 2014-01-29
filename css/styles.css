@@ -114,6 +114,38 @@ body {
 
 a {
 	color: #84bd00;
+	text-decoration: none;
+}
+
+a.more-song-info {
+	text-transform: uppercase;
+	font-size: 12px;
+	color: #000;
+	background: #84bd00;
+	line-height: 20px;
+	display: inline-block;
+	padding: 0px 5px;
+	border-radius: 5px;
+	margin-left: 10px;
+}
+
+a.more-song-info span {
+  width: 14px;
+	background: url(../images/thin-down-arrow.png) no-repeat right center;
+	height: 19px;
+	display: inline-block;
+	float: right;
+	padding: 0 0 0 10px;
+}
+
+.song-summary-container {
+	height: 0px;
+	overflow: hidden;
+	-webkit-transition: 250ms ease;
+}
+
+.song-summary-container.selected {
+	height: auto;
 }
 
 #heading {
@@ -128,8 +160,8 @@ a {
 	padding: 40px;
 }
 
-#segment-container .stage {
-
+#segment-container .results li {
+	padding: 5px 0px;
 }
 
 .loadingIndicator {

@@ -20,10 +20,11 @@
 
     <script type="text/template" id="searchResults-template">
       <div class="stage-container">
-        <ul>
+        <ul class="results">
           <% _.each(songs, function (song) { %>
           <li>
             <a href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %>
+            <a href="#" class="more-song-info">Song Summary<span></span></a>
             <div class="song-summary-container">
               <div class="song-summary-tempo"><%= song.audio_summary.tempo %></div>
               <div class="song-summary-energy"><%= song.audio_summary.energy %></div>
@@ -35,26 +36,6 @@
          </ul>
         </div>
       </div>
-
-
-
-    <!--
-        <table>
-        <th>Song</th>
-        <th>Tempo</th>
-        <th>Energy</th>
-        <th>Danceability</th>
-        <th>Hotttnesss</th>
-        <% _.each(songs, function (song) { %>
-            <tr>
-                <td><a href="" modelID=<%= song.id %>><%= song.title %></a> &mdash; <%= song.artist_name %></td>
-                <td><%= song.audio_summary.tempo %></td>
-                <td><%= song.audio_summary.energy %></td>
-                <td><%= song.audio_summary.danceability %></td>
-                <td><%= song.song_hotttnesss %></td>
-            </tr>
-        <% }); %>
-        </table> -->
     </script>
 </head>
 <body>

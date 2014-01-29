@@ -28,6 +28,18 @@ var defaultParams = {
         target_tempo: 60
 };
 
+// Nicole's Crap
+$(document).delegate('.more-song-info', 'click', showSongSummary);
+
+function showSongSummary(e) {
+  if (!$(this).next('.song-summary-container').hasClass('selected')) {
+	  $(this).next('.song-summary-container').addClass('selected');
+  } else {
+	  $(this).next('.song-summary-container').removeClass('selected');
+  }
+
+}
+
 /////////////////////////////////////
 // Declare main classes for the UI...
 /////////////////////////////////////
@@ -51,6 +63,7 @@ var SearchFormView = Backbone.View.extend({
             "click button[name='search']": 'search'
         };
     },
+
     searchFieldChanged: function (event) {
         if (event.which === 13) {
             event.preventDefault();
