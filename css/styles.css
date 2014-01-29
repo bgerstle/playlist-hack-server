@@ -114,6 +114,12 @@ body {
     margin: 0px;
 }
 
+select,
+option,
+input {
+	-webkit-appearance:none;
+}
+
 a {
 	color: #84bd00;
 	text-decoration: none;
@@ -124,6 +130,12 @@ a {
 .stage h1 {
 	font-size: 24px;
 	margin-bottom: 10px;
+	color: #000;
+}
+
+.stage h2 {
+	font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .searchResults {
@@ -300,4 +312,35 @@ p.artist {
 	color: #fff;
 	border-radius: 10px 10px 0px 0px;
 	border-bottom: 1px solid #84bd00;
+	padding: 15px;
+	overflow: hidden;
+}
+
+.search-container p {
+	font-size: 14px;
+	float: left;
+}
+
+.search-container select {
+	margin: 0 0 0 10px;
+	border: 0px;
+	font-size: 15px;
+	font-family: 'proxima_nova_ltsemibold';
+	color: #84bd00;
+	background: url(../images/thin-down-arrow.png) transparent no-repeat right 0px;
+	position: relative;
+	padding: 0 15px 0 0;
+	bottom: 3px;
+	-webkit-transition: color 250ms ease, background-image 250ms ease;
+	outline: none;
+	cursor: pointer;
+}
+
+.search-container select.hover {
+	background-image: url(../images/thin-down-arrow-white.png);
+	color: #fff;
+}
+
+.search-container select.moveArrowDown {
+	background-position: 40px 0px;
 }

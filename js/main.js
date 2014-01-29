@@ -30,6 +30,15 @@ var defaultPlaylistParams = {
 
 // Nicole's Crap
 $(document).delegate('.more-song-info', 'click', showSongSummary);
+$(document).delegate('.search-container select', 'change', updateSelectUI);
+
+// Update Hover on Select Y DOES IT HAVE TO BE THIS WAY JQUERY
+/* var selectIsFocus = false; */
+$('.searchType').mouseover(function(e) {
+	$(e.target).addClass('hover');
+}).mouseout(function(e) {
+  $(e.target).removeClass('hover');
+});
 
 function showSongSummary(e) {
     if (!$(this).next('.song-summary-container').hasClass('selected')) {
@@ -39,6 +48,19 @@ function showSongSummary(e) {
         $(this).next('.song-summary-container').removeClass('selected');
         $(this).html('+').css('padding', '0px 7px');
     }
+}
+
+function updateSelectUI(e) {
+  $('.searchType').removeClass('hover');
+
+  var selectedText = $('.search-container select').find(":selected").text();
+
+	if (selectedText === 'Artist' || selectedText === 'Genre') {
+		$('.searchType').addClass('moveArrowDown');
+	} else {
+		$('.searchType').removeClass('moveArrowDown');
+	}
+
 }
 
 $('.searchResults').css('height', $(window).height() - 300);
