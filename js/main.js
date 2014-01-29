@@ -113,6 +113,7 @@ var BaseSearchFormView = Backbone.View.extend({
         this.subviews = [];
     },
     render: function () {
+        // skip any subviews we've already appended
         _.each(this.subviews, _.bind(function (subview) {
             if ($.contains(this.$fieldContainer, subview.el)) {
                 return;
@@ -275,19 +276,102 @@ var SearchFormView = BaseSearchFormView.extend({
     }
 });
 
+var SearchResultView = Backbone.View.extend({
+    tagName: 'li',
+    initialize: function (opts) {
+        this.playButton = new PlayButtonView({
+            model: new PlayButtonModel()
+        });
+    },
+    template: function () {
+        return _.template($("#searchResult-template").html(), this.model.toJSON());
+    },
+    render: function () {
+        // !!!: this is awful
+        this.$el.html(this.template());
+        // this.playButton.hide();
+        this.$el.append(this.playButton.el);
+    },
+    isVisible: function () {
+        return this.$el.position().top >= 0 && this.$el.position().top < this.$el.parent().height();
+    },
+    renderPlayButton: function () {
+        if (this.playButton.model.has("tracks")) {
+            return;
+        }
+        this.playButton.model.set("tracks", [this.model.getSpotifyTrackID()]);
+    }
+});
+
 /*
  Lists the responses for a specific search.
  */
-var SearchResultView = Backbone.View.extend({
+var SearchResultListView = Backbone.View.extend({
     initialize: function (options) {
+        _.bindAll(this, 'didScroll', 'checkVisibleSubviews', 'didStopScrolling');
         // re-render when collection syncs
-        this.model.on('sync', this.render.bind(this));
+        this.model.on('sync', this.render, this);
+        this.pollingInterval = 1000;
+        this.$el.scroll(this.didScroll);
+    },
+    remove: function () {
+        clearInterval(this.scrollPoll);
     },
     template: function () {
         return _.template($('#searchResults-template').html(), {songs: this.model.toJSON()});
     },
     render: function () {
         this.$el.html(this.template());
+        this.subviews = this.model.map(_.bind(function (song) {
+            var subview = new SearchResultView({
+                model: song
+            });
+            subview.render();
+            this.$el.append(subview.$el);
+            return subview;
+        }, this));
+        this.checkVisibleSubviews();
+    },
+    didScroll: function (e) {
+        if (!_.has(this, "scrollPoll")) {
+            this.scrollPoll = setInterval(this.checkVisibleSubviews, this.pollingInterval);
+        }
+    },
+    didStopScrolling: function () {
+        if (!_.has(this, "lastScrollPosition")) {
+            this.lastScrollPosition = this.$el.scrollTop();
+            return false;
+        } else if (this.$el.scrollTop() === this.lastScrollPosition) {
+            return true;
+        }
+        this.lastScrollPosition = this.$el.scrollTop();
+        return false;
+    },
+    checkVisibleSubviews: function () {
+        if (this.didStopScrolling()) {
+            clearInterval(this.scrollPoll);
+            delete this.scrollPoll;
+        }
+        var firstVisibleSubview = -1;
+        var lastVisibleSubview = -1;
+        for (var i = 0; i < this.subviews.length; i++) {
+            if (!this.subviews[i].isVisible()) {
+                if (firstVisibleSubview >= 0) {
+                    break;
+                }
+                continue;
+            }
+            if (firstVisibleSubview < 0) {
+                firstVisibleSubview = i;
+            }
+            lastVisibleSubview = i;
+        }
+        if (firstVisibleSubview < 0) {
+            return;
+        }
+        var visibleSubviews = this.subviews.slice(firstVisibleSubview, lastVisibleSubview + 1);
+        console.log("rendering play buttons for subviews " + _.first(visibleSubviews).model.get("title") + " to " + _.last(visibleSubviews).model.get("title"));
+        _.invoke(visibleSubviews, "renderPlayButton");
     },
     events: function () {
         return {
@@ -320,7 +404,7 @@ defaultSearchView.addField();
 defaultSearchView.subviews[0].$el.attr("value", "The Black Keys");
 defaultSearchView.search();
 
-var searchResultsView = new SearchResultView({
+var searchResultsView = new SearchResultListView({
     el: $('#warmup .searchResults'),
     model: defaultPlaylist,
     searchView: defaultSearchView
