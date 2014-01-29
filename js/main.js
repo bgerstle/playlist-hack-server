@@ -56,9 +56,6 @@ $('.searchResults').css('height', $(window).height() - 300);
     attributes: {
         type: "text"
     },
-    initialize: function (opts) {
-        // setup autocomplete
-    },
     serialize: function () {
         return this.$el.val();
     }
@@ -69,8 +66,8 @@ $('.searchResults').css('height', $(window).height() - 300);
  and execute a search.
  */
 var BaseSearchFormView = Backbone.View.extend({
-    fieldClass: function () {
-        return ArtistGenreSearchField;
+    searchFieldFactory: function () {
+        return new ArtistGenreSearchField();
     },
     initialize: function (opts) {
         this.subviews = [];
@@ -82,6 +79,7 @@ var BaseSearchFormView = Backbone.View.extend({
     },
     events: function () {
         return {
+            'change select.searchType': 'searchTypeChanged',
             'click .addField': 'addField',
             'click .removeField': 'removeField',
             'keyup input.searchField': 'searchFieldChanged',
@@ -89,7 +87,8 @@ var BaseSearchFormView = Backbone.View.extend({
         };
     },
     reset: function () {
-        this.$fieldContainer.empty();
+        _.invoke(this.subviews, 'remove');
+        this.subviews = [];
     },
     render: function () {
         _.each(this.subviews, _.bind(function (subview) {
@@ -102,6 +101,10 @@ var BaseSearchFormView = Backbone.View.extend({
         this.$addFieldButton.prop("disabled", this.subviews.length === this.maxFields);
         this.$removeFieldButton.prop("disabled", this.subviews.length <= 1);
         this.$searchButton.prop("disabled", this.subviews.length === 0);
+    },
+    searchTypeChanged: function (event) {
+        this.reset();
+        this.render();
     },
     searchFieldChanged: function (event) {
         if (event.which === 13) {
@@ -116,8 +119,7 @@ var BaseSearchFormView = Backbone.View.extend({
             return;
         }
 
-        var fieldClass = _.result(this, "fieldClass");
-        var newSubview = new fieldClass();
+        var newSubview = _.result(this, "searchFieldFactory");
         newSubview.render();
         this.subviews.push(newSubview);
         this.render();
@@ -182,7 +184,62 @@ var BaseSearchFormView = Backbone.View.extend({
     }
 });
 
+var SongSearchField = ArtistGenreSearchField.extend({
+    initialize: function (opts) {
+        _.bindAll(this, 'autoCompleteSourceCallback', 'autoCompleteSelected');
+        this.model.comparator = function (a, b) {
+            return b.get("song_hotttnesss") - a.get("song_hotttnesss");
+        };
+        this.$el.autocomplete({
+            delay: 500,
+            source: this.autoCompleteSourceCallback,
+            select: this.autoCompleteSelected
+        });
+        this.$el.autocomplete._renderItem = function (ul, item) {
+              return $( "<li>" )
+                     .attr( "data-value", item.label )
+                     .append( $( "<a>" ).text( item.label ) )
+                     .appendTo( ul );
+        };
+    },
+    autoCompleteSourceCallback: function (request, callback) {
+        this.model.deferredFetch({
+            songParams: {
+                combined: encodeURIComponent(request.term),
+                bucket: 'song_hotttnesss'
+            },
+            reset: true,
+            silent: false
+        }).done(function (collection, json, options) {
+            callback(collection.map(function (model) {
+                return {
+                    label: model.get("title") + " by " + model.get('artist_name'),
+                    value: model.get("id")
+                };
+            }));
+        });
+    },
+    autoCompleteSelected: function (event, ui) {
+        event.preventDefault();
+        this.$el.val(ui.item.label);
+        this.$el.attr("data-id", ui.item.value);
+        return false;
+    },
+    serialize: function () {
+        return this.$el.attr("data-id");
+    }
+});
+
 var SearchFormView = BaseSearchFormView.extend({
+    searchFieldFactory: function () {
+        if (this.getSearchType() !== 'song-radio') {
+            return BaseSearchFormView.prototype.searchFieldFactory.call(this);
+        }
+
+        return new SongSearchField({
+            model: new EchoNest.SearchSongModel()
+        });
+    },
     initialize: function (opts) {
         BaseSearchFormView.prototype.initialize.call(this, opts);
         this.maybeValidateSearchField = _.debounce(this.maybeValidateSearchField, 500);
