@@ -5,6 +5,22 @@ body {
     height: 100%;
 }
 
+#search {
+    top: 0;
+    left: 0;
+    width: 50%; /*should be same as playlist*/
+}
+
+#search > div {
+    position: relative;
+    margin-top: 5px;
+}
+
+.searchField {
+    position: relative;
+    margin-top: 5px;
+}
+
 #playlist {
     width: 50%;
     height: 100%;
