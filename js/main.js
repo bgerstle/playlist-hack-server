@@ -294,7 +294,9 @@ var defaultSearchView = new SearchFormView({
     el: $('#warmup .search'),
     model: defaultPlaylist
 });
-defaultSearchView.render();
+defaultSearchView.addField();
+defaultSearchView.subviews[0].$el.attr("value", "The Black Keys");
+defaultSearchView.search();
 
 var searchResultsView = new SearchResultView({
     el: $('#warmup .searchResults'),
