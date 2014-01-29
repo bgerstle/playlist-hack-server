@@ -38,29 +38,31 @@
 </head>
 <body>
     <iframe id="preview"></iframe>
-    <div id="search">
-        <div>
-            <select>
-                <option name="type" value="artist-radio" selected>Artist Radio</option>
-                <option name="type" value="artist">Artist</option>
-                <option name="type" value="genre-radio">Genre</option>
-            </select>
+    <div id="warmup">
+        <div class="search">
+            <div>
+                <select>
+                    <option name="type" value="artist-radio" selected>Artist Radio</option>
+                    <option name="type" value="artist">Artist</option>
+                    <option name="type" value="genre-radio">Genre</option>
+                </select>
+            </div>
+            <div class="searchFieldContainer">
+                <input type="text" class="searchField" value="Michael Jackson"></input>
+            </div>
+            <div>
+                <button type="button" class="removeField" disabled>-</button>
+                <button type="button" class="addField">+</button>
+            </div>
+            <div>
+                <!-- Add advanced search options -->
+            </div>
+            <div>
+                <button type="button" name="search">Search</button>
+            </div>
         </div>
-        <div id="searchFieldContainer">
-            <input type="text" class="searchField" value="Michael Jackson"></input>
-        </div>
-        <div>
-            <button type="button" id="removeField" disabled>-</button>
-            <button type="button" id="addField">+</button>
-        </div>
-        <div>
-            <!-- Add advanced search options -->
-        </div>
-        <div>
-            <button type="button" name="search">Search</button>
-        </div>
+        <div class="loadingIndicator">Loading...</div>
+        <div class="searchResults"></div>
     </div>
-    <div class="loadingIndicator">Loading...</div>
-    <div id="searchResults"></div>
 </body>
 </html>

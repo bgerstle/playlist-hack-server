@@ -38,15 +38,15 @@ var defaultParams = {
  */
 var SearchFormView = Backbone.View.extend({
     initialize: function (opts) {
-        this.$addField = this.$('#addField');
-        this.$removeField = this.$('#removeField');
-        this.$fieldContainer = this.$('#searchFieldContainer');
+        this.$addField = this.$('.addField');
+        this.$removeField = this.$('.removeField');
+        this.$fieldContainer = this.$('.searchFieldContainer');
         this.maxFields = opts && opts.maxFields ? opts.maxFields : 5;
     },
     events: function () {
         return {
-            'click #addField': 'addField',
-            'click #removeField': 'removeField',
+            'click .addField': 'addField',
+            'click .removeField': 'removeField',
             'keypress input.searchField': 'searchFieldChanged',
             "click button[name='search']": 'search'
         };
@@ -181,20 +181,20 @@ var defaultPlaylist = new EchoNest.StaticPlaylist([],{
     }
 });
 var defaultSearchView = new SearchFormView({
-    el: $('#search'),
+    el: $('#warmup > .search'),
     model: defaultPlaylist
 });
 defaultSearchView.render();
 defaultSearchView.search();
 
 var searchResultsView = new SearchResultView({
-    el: $('#searchResults'),
+    el: $('#warmup > .searchResults'),
     model: defaultPlaylist,
     searchView: defaultSearchView
 });
 searchResultsView.render();
 
-var $loadingIndicator = $('.loadingIndicator');
+var $loadingIndicator = $('#warmup > .loadingIndicator');
 defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
 defaultSearchView.on('search:finished search:failed', $loadingIndicator.fadeOut, $loadingIndicator);
 

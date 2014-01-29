@@ -5,13 +5,13 @@ body {
     height: 100%;
 }
 
-#search {
+.search {
     top: 0;
     left: 0;
     width: 50%; /*should be same as searchResults*/
 }
 
-#search > div {
+.search > div {
     position: relative;
     margin-top: 5px;
 }
@@ -28,7 +28,7 @@ body {
     background-color: rgba(0,0,0,0.5);
 }
 
-#searchResults {
+.searchResults {
     width: 50%;
     height: 100%;
 }
