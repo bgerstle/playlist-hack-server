@@ -92,7 +92,7 @@ var BaseSearchFormView = Backbone.View.extend({
         return new ArtistGenreSearchField();
     },
     initialize: function (opts) {
-        this.subviews = [];
+        this.resultSubviews = [];
         this.$addFieldButton = this.$('button.addField');
         this.$removeFieldButton = this.$('button.removeField');
         this.$fieldContainer = this.$('.searchFieldContainer');
@@ -109,21 +109,21 @@ var BaseSearchFormView = Backbone.View.extend({
         };
     },
     reset: function () {
-        _.invoke(this.subviews, 'remove');
-        this.subviews = [];
+        _.invoke(this.resultSubviews, 'remove');
+        this.resultSubviews = [];
     },
     render: function () {
-        // skip any subviews we've already appended
-        _.each(this.subviews, _.bind(function (subview) {
+        // skip any resultSubviews we've already appended
+        _.each(this.resultSubviews, _.bind(function (subview) {
             if ($.contains(this.$fieldContainer, subview.el)) {
                 return;
             }
             this.$fieldContainer.append(subview.$el);
         }, this));
 
-        this.$addFieldButton.prop("disabled", this.subviews.length === this.maxFields);
-        this.$removeFieldButton.prop("disabled", this.subviews.length <= 1);
-        this.$searchButton.prop("disabled", this.subviews.length === 0);
+        this.$addFieldButton.prop("disabled", this.resultSubviews.length === this.maxFields);
+        this.$removeFieldButton.prop("disabled", this.resultSubviews.length <= 1);
+        this.$searchButton.prop("disabled", this.resultSubviews.length === 0);
     },
     searchTypeChanged: function (event) {
         this.reset();
@@ -138,21 +138,21 @@ var BaseSearchFormView = Backbone.View.extend({
         return true;
     },
     addField: function (event) {
-        if (this.subviews.length === this.maxFields) {
+        if (this.resultSubviews.length === this.maxFields) {
             return;
         }
 
         var newSubview = _.result(this, "searchFieldFactory");
         newSubview.render();
-        this.subviews.push(newSubview);
+        this.resultSubviews.push(newSubview);
         this.render();
     },
     removeField: function(event) {
-        if (this.subviews.length === 1) {
+        if (this.resultSubviews.length === 1) {
             return;
         }
 
-        var lastSubview = this.subviews.pop();
+        var lastSubview = this.resultSubviews.pop();
         lastSubview.remove();
         this.render();
     },
@@ -178,7 +178,7 @@ var BaseSearchFormView = Backbone.View.extend({
         return encodeURIComponent(value);
     },
     getEncodedSeedValues: function () {
-        return _.chain(this.subviews).map(function (subview) {
+        return _.chain(this.resultSubviews).map(function (subview) {
             return subview.serialize();
         }).map(this.encodeSeedValue).value();
     },
@@ -316,7 +316,7 @@ var SearchResultListView = Backbone.View.extend({
     },
     render: function () {
         this.$el.html(this.template());
-        this.subviews = this.model.map(_.bind(function (song) {
+        this.resultSubviews = this.model.map(_.bind(function (song) {
             var subview = new SearchResultView({
                 model: song
             });
@@ -348,8 +348,8 @@ var SearchResultListView = Backbone.View.extend({
         }
         var firstVisibleSubview = -1;
         var lastVisibleSubview = -1;
-        for (var i = 0; i < this.subviews.length; i++) {
-            if (!this.subviews[i].isVisible()) {
+        for (var i = 0; i < this.resultSubviews.length; i++) {
+            if (!this.resultSubviews[i].isVisible()) {
                 if (firstVisibleSubview >= 0) {
                     break;
                 }
@@ -363,7 +363,7 @@ var SearchResultListView = Backbone.View.extend({
         if (firstVisibleSubview < 0) {
             return;
         }
-        var visibleSubviews = this.subviews.slice(firstVisibleSubview, lastVisibleSubview + 1);
+        var visibleSubviews = this.resultSubviews.slice(firstVisibleSubview, lastVisibleSubview + 1);
         console.log("rendering play buttons for subviews " + _.first(visibleSubviews).model.get("title") + " to " + _.last(visibleSubviews).model.get("title"));
         _.invoke(visibleSubviews, "renderPlayButton");
     },
@@ -395,7 +395,8 @@ var defaultSearchView = new SearchFormView({
     model: defaultPlaylist
 });
 defaultSearchView.addField();
-defaultSearchView.subviews[0].$el.attr("value", "The Black Keys");
+defaultSearchView.$(".searchType > [value='artist-radio']").prop("selected", true);
+defaultSearchView.resultSubviews[0].$el.attr("value", "The Black Keys");
 defaultSearchView.search();
 
 var searchResultsView = new SearchResultListView({
