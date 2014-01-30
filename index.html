@@ -44,11 +44,33 @@
     </div>
   </script>
   <script type="text/template" id="stage-template">
+    <div class="stage-description">
+      <h1><%= title %></h1>
+      <h2><%= subtitle %></h2>
+    </div>
+    <div class="stage-module-container">
+      <div class="search-container">
+        <div class="searchType">
+        </div>
+        <div class="searchFieldContainer"></div>
+        <div>
+          <button type="button" class="removeField" disabled>-</button>
+          <button type="button" class="addField">+</button>
+        </div>
+        <div>
+          <button type="button" class="search">Search</button>
+        </div>
+      </div>
+    </div>
+    <div class="loadingIndicator" style="display: none;">
+      <div class="eq-spinner"><i></i></div>
+    </div>
+    <div class="searchResults"></div>
   </script>
   <script type="text/template" id="searchType-template">
     <p>View tracks based on: </p>
     <select single>
-      <% _.each(options, function (data, option) { %>
+      <% _.each(options, function(data, option) { %>
         <option name=<%= data.seed %> value=<%= option %>><%= data.text %></option>
       <% }); %>
     </select>
@@ -58,31 +80,6 @@
   <div id="heading">| Workout Playlist Generator</div>
   <div id="stage-container">
     <div id="warmup" class="stage">
-      <div class="stage-description">
-        <h1>Warm Up</h1>
-        <h2>Select some songs to go along with your warm up.</h2>
-      </div>
-      <div class="stage-module-container">
-        <div class="search-container">
-          <div class="searchType">
-          </div>
-          <div class="searchFieldContainer"></div>
-          <div>
-            <button type="button" class="removeField" disabled>-</button>
-            <button type="button" class="addField">+</button>
-          </div>
-          <div>
-            <!-- Add advanced search options -->
-          </div>
-          <div>
-            <button type="button" class="search">Search</button>
-          </div>
-        </div>
-      </div>
-      <div class="loadingIndicator" style="display: none;">
-        <div class="eq-spinner"><i></i></div>
-      </div>
-      <div class="searchResults"></div>
     </div>
   </div>
 </body>

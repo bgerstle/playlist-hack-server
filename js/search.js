@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
 var root = this.exports || this;
 
@@ -8,7 +8,7 @@ var Search = root.Search = {};
 /// Search Parameters
 ///
 
-Search.DefaultParams = function () {
+Search.DefaultParams = function() {
   return _.clone({
     sort: 'energy-desc',
     song_selection: 'energy-top',
@@ -35,7 +35,7 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
   attributes: {
     type: "text"
   },
-  serialize: function () {
+  serialize: function() {
     return this.$el.val();
   }
 });
@@ -44,9 +44,9 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
  Field which provides autocomplete suggestions for combined song title & artist.
 */
 Search.SongSearchField = Search.ArtistGenreSearchField.extend({
-  initialize: function (opts) {
+  initialize: function(opts) {
     _.bindAll(this, 'autoCompleteSourceCallback', 'autoCompleteSelected');
-    this.model.comparator = function (a, b) {
+    this.model.comparator = function(a, b) {
       return b.get("song_hotttnesss") - a.get("song_hotttnesss");
     };
     this.$el.autocomplete({
@@ -55,7 +55,7 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
       select: this.autoCompleteSelected
     });
   },
-  autoCompleteSourceCallback: function (request, callback) {
+  autoCompleteSourceCallback: function(request, callback) {
     this.model.deferredFetch({
       songParams: {
         combined: encodeURIComponent(request.term),
@@ -64,8 +64,8 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
       },
       reset: true,
       silent: false
-    }).done(function (collection, json, options) {
-      callback(collection.map(function (model) {
+    }).done(function(collection, json, options) {
+      callback(collection.map(function(model) {
         return {
           value: model.get("title") + " by " + model.get('artist_name'),
           data_id: model.get("id")
@@ -73,19 +73,19 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
       }));
     });
   },
-  autoCompleteSelected: function (event, ui) {
+  autoCompleteSelected: function(event, ui) {
     event.preventDefault();
     this.$el.val(ui.item.label);
     this.$el.attr("data-id", ui.item.data_id);
     return false;
   },
-  serialize: function () {
+  serialize: function() {
     return this.$el.attr("data-id");
   }
 });
 
 Search.SearchTypeView = Backbone.View.extend({
-  initialize: function (opts) {
+  initialize: function(opts) {
     if (!opts || !opts.types) {
       throw "Must specify search types!";
     }
@@ -94,25 +94,25 @@ Search.SearchTypeView = Backbone.View.extend({
   events: {
     'change select': 'typeSelected'
   },
-  typeSelected: function (event) {
+  typeSelected: function(event) {
     this.trigger('change', $(event.target).val());
   },
-  template: function () {
+  template: function() {
     return _.template($('#searchType-template').html(), {
       options: this.searchTypes
     });
   },
-  render: function () {
+  render: function() {
     this.$el.html(this.template());
   },
-  serialize: function () {
+  serialize: function() {
     var $selected = this.$(":selected");
     return {
       value: $selected.val(),
       seed: $selected.attr('name')
     };
   },
-  select: function (type) {
+  select: function(type) {
     $("option[value='" + type + "']").prop("selected", true);
   }
 });
@@ -125,10 +125,10 @@ Search.SearchTypeView = Backbone.View.extend({
  View which contains controls which allow the user to tweak and execute a search.
  */
 Search.BaseSearchFormView = Backbone.View.extend({
-  searchFieldFactory: function () {
+  searchFieldFactory: function() {
     return new Search.ArtistGenreSearchField();
   },
-  searchTypeFactory: function () {
+  searchTypeFactory: function() {
     return {
        'artist-radio': {
           text: "Artist Radio",
@@ -144,14 +144,14 @@ Search.BaseSearchFormView = Backbone.View.extend({
        }
     };
   },
-  searchTypeViewFactory: function () {
+  searchTypeViewFactory: function() {
     var types = _.result(this, "searchTypeFactory");
     return new Search.SearchTypeView({
       el: this.$('.searchType'),
       types: types
     });
   },
-  initialize: function (opts) {
+  initialize: function(opts) {
     this.searchTypeView = _.result(this, "searchTypeViewFactory");
     this.searchTypeView.on('change', this.searchTypeChanged, this);
     // until search type is modelized, only render it once, otherwise the
@@ -167,7 +167,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     this.$searchButton = this.$('button.search');
     this.maxFields = 5;
   },
-  events: function () {
+  events: function() {
     return {
       'click .addField': 'addField',
       'click .removeField': 'removeField',
@@ -175,13 +175,13 @@ Search.BaseSearchFormView = Backbone.View.extend({
       "click button.search": 'search'
     };
   },
-  reset: function () {
+  reset: function() {
     _.invoke(this.fieldViews, 'remove');
     this.fieldViews = [];
   },
-  render: function () {
+  render: function() {
     // skip any fieldViews we've already appended
-    _.each(this.fieldViews, _.bind(function (subview) {
+    _.each(this.fieldViews, _.bind(function(subview) {
       if ($.contains(this.$fieldContainer, subview.el)) {
         return;
       }
@@ -192,14 +192,14 @@ Search.BaseSearchFormView = Backbone.View.extend({
     this.$removeFieldButton.prop("disabled", this.fieldViews.length <= 1);
     this.$searchButton.prop("disabled", this.fieldViews.length === 0);
   },
-  searchTypeChanged: function (event) {
+  searchTypeChanged: function(event) {
     this.reset();
     this.addField();
   },
-  getSearchType: function () {
+  getSearchType: function() {
     return this.searchTypeView.serialize().value;
   },
-  searchFieldChanged: function (event) {
+  searchFieldChanged: function(event) {
     if (event.which === 13) {
       event.preventDefault();
       this.search();
@@ -207,7 +207,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     }
     return true;
   },
-  addField: function (event) {
+  addField: function(event) {
     if (this.fieldViews.length === this.maxFields) {
       return;
     }
@@ -226,37 +226,37 @@ Search.BaseSearchFormView = Backbone.View.extend({
     lastSubview.remove();
     this.render();
   },
-  encodeSeedValue: function (value) {
+  encodeSeedValue: function(value) {
     return encodeURIComponent(value);
   },
-  getEncodedFieldValues: function () {
+  getEncodedFieldValues: function() {
     return _.chain(this.fieldViews)
-    .map(function (subview) {
+    .map(function(subview) {
       return subview.serialize();
     })
     .map(this.encodeSeedValue)
     .value();
   },
-  serialize: function () {
+  serialize: function() {
     // TODO: modelize this so we can do validation
     var searchType = this.searchTypeView.serialize();
     var params = {type: searchType.value};
     params[searchType.seed] = this.getEncodedFieldValues();
     return params;
   },
-  search: function (e) {
+  search: function(e) {
     var params = _.defaults(this.serialize(), _.result(Search, "DefaultParams"));
     this.trigger('search:started', params);
     return this.model.deferredFetch({
       playlistParams: params,
       reset: true,
       silent: false
-    }).done(_.bind(function (collection, response, options) {
+    }).done(_.bind(function(collection, response, options) {
       this.trigger('search:finished');
       console.log("fetch response:");
       console.log(response);
     }, this))
-    .fail(_.bind(function (collection, response, options) {
+    .fail(_.bind(function(collection, response, options) {
       this.trigger('search:failed');
       alert(JSON.stringify(response));
     }, this));
@@ -264,7 +264,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
 });
 
 Search.SearchFormView = Search.BaseSearchFormView.extend({
-  searchFieldFactory: function () {
+  searchFieldFactory: function() {
     if (this.getSearchType() !== 'song-radio') {
       return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
     }
@@ -272,7 +272,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
       model: new EchoNest.SearchSongModel()
     });
   },
-  searchTypeFactory: function () {
+  searchTypeFactory: function() {
     return _.defaults({
       'song-radio': {
         text: "Song Radio",
@@ -280,7 +280,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
       }
     }, Search.BaseSearchFormView.prototype.searchTypeFactory.call(this));
   },
-  initialize: function (opts) {
+  initialize: function(opts) {
     Search.BaseSearchFormView.prototype.initialize.call(this, opts);
     this.maybeValidateSearchField = _.debounce(this.maybeValidateSearchField, 500);
     this.songSearches = {};
@@ -291,7 +291,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
 Search.SearchResultView = Backbone.View.extend({
   tagName: 'li',
   className: 'searchResult',
-  initialize: function (opts) {
+  initialize: function(opts) {
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
     });
@@ -299,21 +299,21 @@ Search.SearchResultView = Backbone.View.extend({
     this.$playButtonContainer = $('<div class="iframe-container"></div>');
     this.playButton.$el.appendTo(this.$playButtonContainer);
   },
-  template: function () {
+  template: function() {
     return _.template($("#searchResult-template").html(), this.model.toJSON());
   },
-  render: function () {
+  render: function() {
     // !!!: this is awful
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
   },
-  isVisible: function ($superview) {
+  isVisible: function($superview) {
     if (!this.$el.parent()) {
       return false;
     }
     return (this.$el.position().top >= 0) && (this.$el.position().top < $superview.height());
   },
-  renderPlayButton: function () {
+  renderPlayButton: function() {
     if (this.playButton.model.has("tracks")) {
       return;
     }
@@ -325,20 +325,20 @@ Search.SearchResultView = Backbone.View.extend({
 Lists the responses for a specific search.
 */
 Search.SearchResultListView = Backbone.View.extend({
-  initialize: function (options) {
+  initialize: function(options) {
     _.bindAll(this, 'didScroll', 'checkVisibleSubviews', 'didStopScrolling');
       // re-render when collection syncs
       this.model.on('sync', this.render, this);
       this.pollingInterval = 1000;
       this.$el.scroll(this.didScroll);
   },
-  remove: function () {
+  remove: function() {
     clearInterval(this.scrollPoll);
   },
-  template: function () {
+  template: function() {
     return _.template($('#searchResultList-template').html(), {songs: this.model.toJSON()});
   },
-  render: function () {
+  render: function() {
     // remove subviews manually in case they need to do any cleanup
     _.invoke(this.resultSubviews, "remove");
 
@@ -349,7 +349,7 @@ Search.SearchResultListView = Backbone.View.extend({
     var $results = this.$(".results");
 
     // append result subviews to results container
-    this.resultSubviews = this.model.map(_.bind(function (song) {
+    this.resultSubviews = this.model.map(_.bind(function(song) {
       var subview = new Search.SearchResultView({
         model: song
       });
@@ -361,12 +361,12 @@ Search.SearchResultListView = Backbone.View.extend({
     // act on visible subviews
     this.checkVisibleSubviews();
   },
-  didScroll: function (e) {
+  didScroll: function(e) {
     if (!_.has(this, "scrollPoll")) {
       this.scrollPoll = setInterval(this.checkVisibleSubviews, this.pollingInterval);
     }
   },
-  didStopScrolling: function () {
+  didStopScrolling: function() {
     if (!_.has(this, "lastScrollPosition")) {
       this.lastScrollPosition = this.$el.scrollTop();
       return false;
@@ -376,7 +376,7 @@ Search.SearchResultListView = Backbone.View.extend({
     this.lastScrollPosition = this.$el.scrollTop();
     return false;
   },
-  checkVisibleSubviews: function () {
+  checkVisibleSubviews: function() {
     if (this.didStopScrolling()) {
       clearInterval(this.scrollPoll);
       delete this.scrollPoll;

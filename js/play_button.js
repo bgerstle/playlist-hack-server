@@ -38,7 +38,7 @@ this.PlayButtonModel = Backbone.Model.extend({
       return null;
     }
 
-    return _.reduce(this.supportedParameters, function (error, validValues, param) {
+    return _.reduce(this.supportedParameters, function(error, validValues, param) {
         // bail if there's already been a validation error
         if (error) return;
 
@@ -56,7 +56,7 @@ this.PlayButtonModel = Backbone.Model.extend({
     return "";
   },
 
-  encodedTitle: function () {
+  encodedTitle: function() {
     return encodeURIComponent(this.get("title"));
   }
 });

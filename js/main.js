@@ -1,4 +1,4 @@
-$().ready(function () {
+$().ready(function() {
 
 // Nicole's Crap
 $(document).delegate('.more-song-info', 'click', showSongSummary);
@@ -38,7 +38,7 @@ function updateSelectUI(e) {
 $('.searchResults').css('height', $(window).height() - 300);
 
 var defaultPlaylist = new EchoNest.StaticPlaylist([], {
-  comparator: function (a, b) {
+  comparator: function(a, b) {
         // sort by song energy, descending
         return b.get("audio_summary").energy - a.get("audio_summary").energy;
   }
