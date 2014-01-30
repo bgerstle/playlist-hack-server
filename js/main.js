@@ -37,10 +37,6 @@ function updateSelectUI(e) {
 
 $('.searchResults').css('height', $(window).height() - 300);
 
-///////////////////////////////
-// Put all the pieces together
-///////////////////////////////
-
 var defaultPlaylist = new EchoNest.StaticPlaylist([],{
   comparator: function (a, b) {
         // sort by song energy, descending
