@@ -51,7 +51,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
   },
   events: function () {
     return {
-      'change select.searchType': 'searchTypeChanged',
+      'change .searchType select': 'searchTypeChanged',
       'click .addField': 'addField',
       'click .removeField': 'removeField',
       'keyup input.searchField': 'searchFieldChanged',
@@ -203,7 +203,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
       return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
     }
 
-    return new SongSearchField({
+    return new Search.SongSearchField({
       model: new EchoNest.SearchSongModel()
     });
   },
