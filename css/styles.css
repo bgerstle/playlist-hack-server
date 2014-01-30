@@ -116,7 +116,8 @@ body {
 
 select,
 option,
-input {
+input,
+button {
 	-webkit-appearance:none;
 }
 
@@ -422,4 +423,24 @@ p.artist {
 
 button[disabled] {
 	display: none;
+}
+
+.addField {
+	border: 0px;
+	background: transparent;
+	border-radius: 10px;
+	color: #fff;
+	float: right;
+}
+
+.removeField {
+	border: 0px;
+	background: transparent;
+	border-radius: 10px;
+	color: #fff;
+	float: right;
+}
+
+.addField:hover {
+	cursor: pointer;
 }
