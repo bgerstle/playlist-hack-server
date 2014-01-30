@@ -227,6 +227,9 @@ Search.SearchResultView = Backbone.View.extend({
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
     });
+
+    this.$playButtonContainer = $('<div class="iframe-container"></div>');
+    this.playButton.$el.appendTo(this.$playButtonContainer);
   },
   template: function () {
     return _.template($("#searchResult-template").html(), this.model.toJSON());
@@ -234,7 +237,7 @@ Search.SearchResultView = Backbone.View.extend({
   render: function () {
     // !!!: this is awful
     this.$el.html(this.template());
-    this.$el.append(this.playButton.el);
+    this.$el.append(this.$playButtonContainer);
   },
   isVisible: function () {
     return this.$el.position().top >= 0 && this.$el.position().top < this.$el.parent().height();
