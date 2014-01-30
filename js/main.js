@@ -318,7 +318,7 @@ var SearchResultListView = Backbone.View.extend({
         clearInterval(this.scrollPoll);
     },
     template: function () {
-        return _.template($('#searchResults-template').html(), {songs: this.model.toJSON()});
+        return _.template($('#searchResultList-template').html(), {songs: this.model.toJSON()});
     },
     render: function () {
         this.$el.html(this.template());
