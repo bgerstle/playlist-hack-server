@@ -4,29 +4,6 @@ var root = this.exports || this;
 
 var Search = root.Search = {};
 
-// Nicole's Crap
-// $(document).delegate('.search-form select', 'change', updateSelectUI);
-
-// $('.search-type').mouseover(function (e) {
-//   $(e.target).addClass('hover');
-// }).mouseout(function (e) {
-//   $(e.target).removeClass('hover');
-// });
-
-// var updateSelectUI = function (e) {
-//   $('.search-type').removeClass('hover');
-
-//   var selectedText = $('.search-form select').find(":selected").text();
-
-//   if (selectedText === 'Artist' || selectedText === 'Genre') {
-//     $('.search-type').addClass('moveArrowDown');
-//   } else {
-//     $('.search-type').removeClass('moveArrowDown');
-//   }
-// };
-
-// $('.search-results').css('height', $(window).height() - 300);
-
 ///
 /// Search Parameters
 ///
@@ -116,10 +93,26 @@ Search.SearchTypeView = Backbone.View.extend({
     this.searchTypes = opts.types;
   },
   events: {
-    'change select': 'typeSelected'
+    'change select': 'typeSelected',
+    'mouseover select': 'didMouseOver',
+    'mouseout select': 'didMouseOut'
   },
   typeSelected: function(event) {
-    this.trigger('change', $(event.target).val());
+    var selectedVal = $(event.target).val();
+    if (this.searchTypes[selectedVal].text.length < 8) {
+      this.$('select').addClass('moveArrowDown');
+    } else {
+      this.$('select').removeClass('moveArrowDown');
+    }
+    this.trigger('change', selectedVal);
+
+    $(event.target).removeClass('hover');
+  },
+  didMouseOver: function (event) {
+    $(event.target).addClass('hover');
+  },
+  didMouseOut: function (event) {
+    $(event.target).removeClass('hover');
   },
   template: function() {
     return _.template($('#search-type-template').html(), {
