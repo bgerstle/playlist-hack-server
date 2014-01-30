@@ -1,15 +1,15 @@
-(function() {
+(function () {
   var apiKey = 'TGPTMPVRMTCOBB9LV';
   var endpoint = 'http://developer.echonest.com/api/v4';
   var root = this;
 
-var queryStringFromParams = function(paramsHash) {
+var queryStringFromParams = function (paramsHash) {
   var keys = _.keys(paramsHash);
 
   // for parameters that support multiple values, we need redundant key=value pairs in the query
-  var pairs = _.reduce(paramsHash, function(pairs, value, key, paramsHash) {
+  var pairs = _.reduce(paramsHash, function (pairs, value, key, paramsHash) {
     if (_.isArray(value)) {
-      _.each(value, function(valueComponent) {
+      _.each(value, function (valueComponent) {
         pairs.push([valueComponent, key]);
       });
     } else {
@@ -19,7 +19,7 @@ var queryStringFromParams = function(paramsHash) {
   }, []);
 
   // format, encode, & stringify each key=value pair
-  return _.reduce(pairs, function(queryString, kvPair, index, pairs) {
+  return _.reduce(pairs, function (queryString, kvPair, index, pairs) {
     if (index !== 0 && index < _.size(pairs)) {
       queryString = queryString + '&';
     }
@@ -35,20 +35,20 @@ EchoNest.RosettaID = {
   Prefixes: {
     spotifyTrack: 'spotify-US:track:'
   },
-  fromSpotifyTrackID: function(spotifyTrackID) {
+  fromSpotifyTrackID: function (spotifyTrackID) {
     return this.Prefixes.spotifyTrack + spotifyTrackID;
   },
-  toSpotifyTrackID: function(spotifyTrackFID) {
+  toSpotifyTrackID: function (spotifyTrackFID) {
     return spotifyTrackFID.slice(this.Prefixes.spotifyTrack.length);
   }
 };
-_.each(_.functions(EchoNest.RosettaID), function(fn) {
+_.each(_.functions(EchoNest.RosettaID), function (fn) {
   EchoNest.RosettaID[fn].bind(EchoNest.RosettaID);
 });
 
 var DeferredFetching = {};
 DeferredFetching.prototype = {
-  deferredFetch: function(options) {
+  deferredFetch: function (options) {
     var deferred = new $.Deferred();
     this.fetch(_.extend(options || {}, {
       success: deferred.resolve.bind(deferred),
@@ -59,7 +59,7 @@ DeferredFetching.prototype = {
 };
 
 EchoNest.SongModel = Backbone.Model.extend({
-  getTrackFIDFromCatalog: function(catalog) {
+  getTrackFIDFromCatalog: function (catalog) {
     if (!this.has("tracks")) {
       return null;
     }
@@ -69,29 +69,29 @@ EchoNest.SongModel = Backbone.Model.extend({
     }
     return null;
   },
-  getSpotifyTrackFID: function() {
+  getSpotifyTrackFID: function () {
     return this.getTrackFIDFromCatalog('spotify-US');
   },
-  getSpotifyTrackID: function() {
+  getSpotifyTrackID: function () {
     return EchoNest.RosettaID.toSpotifyTrackID(this.getSpotifyTrackFID());
   }
 });
 
 EchoNest.SearchSongModel = Backbone.Collection.extend({
   model: EchoNest.SongModel,
-  initialize: function(attrs, options) {
+  initialize: function (attrs, options) {
     if (options && options.songParams) {
       this.songParams = options.songParams;
     }
   },
-  url: function() {
+  url: function () {
     return endpoint + '/song/search/' + queryStringFromParams(_.defaults(this.songParams || {}, {
       api_key: apiKey,
                 // required for cross-domain requests
                 format: 'jsonp'
               }));
   },
-  fetch: function(options) {
+  fetch: function (options) {
     if (options && options.songParams) {
       this.songParams = options.songParams;
     }
@@ -101,7 +101,7 @@ EchoNest.SearchSongModel = Backbone.Collection.extend({
                 callback: 'callback'
               }));
   },
-  parse: function(data) {
+  parse: function (data) {
     return data.response.songs;
   }
 });
@@ -110,12 +110,12 @@ _.extend(EchoNest.SearchSongModel.prototype, DeferredFetching.prototype);
 
 EchoNest.StaticPlaylist = Backbone.Collection.extend({
   model: EchoNest.SongModel,
-  initialize: function(models, options) {
+  initialize: function (models, options) {
     if (options && options.playlistParams) {
       this.playlistParams = options.playlistParams;
     }
   },
-  url: function() {
+  url: function () {
     return endpoint + '/playlist/static' + queryStringFromParams(_.defaults(this.playlistParams, {
       api_key: apiKey,
       // required for cross-domain requests
@@ -126,10 +126,10 @@ EchoNest.StaticPlaylist = Backbone.Collection.extend({
       limit: true
     }));
   },
-  parse: function(json) {
+  parse: function (json) {
     return json.response.songs;
   },
-  fetch: function(options) {
+  fetch: function (options) {
     if (options && options.playlistParams) {
       this.playlistParams = options.playlistParams;
     }
@@ -140,8 +140,8 @@ EchoNest.StaticPlaylist = Backbone.Collection.extend({
                                   });
     return Backbone.Collection.prototype.fetch.call(this, finalOptions);
   },
-  getSpotifyTrackIDs: function() {
-    return _.reduce(this.models, function(memo, songModel) {
+  getSpotifyTrackIDs: function () {
+    return _.reduce(this.models, function (memo, songModel) {
       var trackID = songModel.getSpotifyTrackID();
       if (trackID) {
         memo.push(trackID);

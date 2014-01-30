@@ -217,7 +217,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     this.fieldViews.push(newSubview);
     this.render();
   },
-  removeField: function(event) {
+  removeField: function (event) {
     if (this.fieldViews.length === 1) {
       return;
     }

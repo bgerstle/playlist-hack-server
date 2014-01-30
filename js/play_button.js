@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 var supportedParametersHash = {
   theme: {black: "black", white: "white"},
@@ -14,7 +14,7 @@ this.PlayButtonModel = Backbone.Model.extend({
 
   supportedParameters: supportedParametersHash,
 
-  initialize: function(options) {
+  initialize: function (options) {
     if (options) {
       if (typeof options.tracks === Array) {
         this.set("tracks", options.tracks.slice());
@@ -26,14 +26,14 @@ this.PlayButtonModel = Backbone.Model.extend({
     }
   },
 
-  validate: function(attrs, options) {
+  validate: function (attrs, options) {
     var paramValidationError = this.validateSupportedParameters(attrs,options);
     if (paramValidationError) {
       return paramValidationError;
     }
   },
 
-  validateSupportedParameters: function(attrs, options) {
+  validateSupportedParameters: function (attrs, options) {
     if (!attrs) {
       return null;
     }
@@ -49,7 +49,7 @@ this.PlayButtonModel = Backbone.Model.extend({
       }, null);
   },
 
-  commaSeparatedTracks: function() {
+  commaSeparatedTracks: function () {
     if (this.has("tracks") && this.get("tracks").length > 0) {
       return this.get("tracks").join(',');
     }
@@ -62,7 +62,7 @@ this.PlayButtonModel = Backbone.Model.extend({
 });
 
 this.PlayButtonView= Backbone.View.extend({
-  initialize: function(options) {
+  initialize: function (options) {
     this.model.on("change", this.render, this);
   },
 
@@ -73,15 +73,15 @@ this.PlayButtonView= Backbone.View.extend({
     frameborder: "0"
   },
 
-  hide: function() {
+  hide: function () {
     this.$el.hide();
   },
 
-  show: function() {
+  show: function () {
     this.$el.show();
   },
 
-  render: function() {
+  render: function () {
     if (this.model.validate()) {
       throw "Failed to render play button: " + this.model.validationError;
     }

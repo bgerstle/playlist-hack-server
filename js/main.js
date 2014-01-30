@@ -6,9 +6,9 @@ $(document).delegate('.search-container select', 'change', updateSelectUI);
 
 // Update Hover on Select Y DOES IT HAVE TO BE THIS WAY JQUERY
 /* var selectIsFocus = false; */
-$('.searchType').mouseover(function(e) {
+$('.searchType').mouseover(function (e) {
 	$(e.target).addClass('hover');
-}).mouseout(function(e) {
+}).mouseout(function (e) {
   $(e.target).removeClass('hover');
 });
 
