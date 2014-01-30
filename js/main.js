@@ -48,10 +48,8 @@ var defaultSearchView = new Search.SearchFormView({
   el: $('#warmup .search-container'),
   model: defaultPlaylist
 });
-defaultSearchView.$(".searchType select option[value='artist-radio']").attr("selected", true);
+defaultSearchView.$(".searchType select option[value='song-radio']").attr("selected", true);
 defaultSearchView.addField();
-defaultSearchView.fieldViews[0].$el.attr("value", "The Black Keys");
-defaultSearchView.search();
 
 var searchResultsView = new Search.SearchResultListView({
   el: $('#warmup .searchResults'),

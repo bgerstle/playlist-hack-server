@@ -14,12 +14,11 @@ Search.DefaultParams = function () {
     song_selection: 'energy-top',
     song_type: 'studio',
     results: 50,
-    variety: 0.1,
+    variety: 0.3,
     min_energy: 0.2,
     min_danceability: 0.4,
     target_song_hotttnesss: 0.8,
-    target_artist_hotttnesss: 0.6,
-    target_tempo: 60
+    target_artist_hotttnesss: 0.6
   });
 };
 
