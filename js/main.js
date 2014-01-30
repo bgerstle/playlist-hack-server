@@ -2,11 +2,11 @@ $().ready(function() {
 
 // Nicole's Crap
 $(document).delegate('.more-song-info', 'click', showSongSummary);
-$(document).delegate('.search-container select', 'change', updateSelectUI);
+$(document).delegate('.search-form select', 'change', updateSelectUI);
 
 // Update Hover on Select Y DOES IT HAVE TO BE THIS WAY JQUERY
 /* var selectIsFocus = false; */
-$('.searchType').mouseover(function (e) {
+$('.search-type').mouseover(function (e) {
 	$(e.target).addClass('hover');
 }).mouseout(function (e) {
   $(e.target).removeClass('hover');
@@ -23,47 +23,33 @@ function showSongSummary(e) {
 }
 
 function updateSelectUI(e) {
-  $('.searchType').removeClass('hover');
+  $('.search-type').removeClass('hover');
 
-  var selectedText = $('.search-container select').find(":selected").text();
+  var selectedText = $('.search-form select').find(":selected").text();
 
   if (selectedText === 'Artist' || selectedText === 'Genre') {
-    $('.searchType').addClass('moveArrowDown');
+    $('.search-type').addClass('moveArrowDown');
   } else {
-    $('.searchType').removeClass('moveArrowDown');
+    $('.search-type').removeClass('moveArrowDown');
   }
 
 }
 
-$('.searchResults').css('height', $(window).height() - 300);
+$('.search-results').css('height', $(window).height() - 300);
 
-var defaultPlaylist = new EchoNest.StaticPlaylist([], {
-  comparator: function(a, b) {
-        // sort by song energy, descending
-        return b.get("audio_summary").energy - a.get("audio_summary").energy;
-  }
+var defaultStage = new Stage.Model({
+  index: 0,
+  title: 'Warm Up',
+  subtitle: 'Ease into your workout.'
 });
 
-var defaultSearchView = new Search.SearchFormView({
-  el: $('#warmup .search-container'),
-  model: defaultPlaylist
-});
-defaultSearchView.$(".searchType select option[value='song-radio']").attr("selected", true);
-defaultSearchView.addField();
+var stages = new Stage.Collection();
 
-var searchResultsView = new Search.SearchResultListView({
-  el: $('#warmup .searchResults'),
-  model: defaultPlaylist,
-  searchView: defaultSearchView
+var stageViews = new Stage.ContainerView({
+  el: $('#stage-container'),
+  model: stages
 });
-searchResultsView.render();
 
-var $loadingIndicator = $('.loadingIndicator');
-defaultSearchView.on('search:started',
-                     $loadingIndicator.fadeIn,
-                     $loadingIndicator);
-defaultSearchView.on('search:finished search:failed',
-                     $loadingIndicator.fadeOut,
-                     $loadingIndicator);
+stages.add(defaultStage);
 
 });

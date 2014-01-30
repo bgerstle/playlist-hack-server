@@ -11,10 +11,12 @@
   <!-- Styles -->
   <link rel="stylesheet" type="text/css" href="css/styles.css">
 
-  <!-- Code -->
+  <!-- Code *ORDER IS IMPORTANT* -->
+  <!-- Use a proper module/require system -->
   <script type="text/javascript" src="js/play_button.js"></script>
   <script type="text/javascript" src="js/playlist.js"></script>
   <script type="text/javascript" src="js/search.js"></script>
+  <script type="text/javascript" src="js/stage.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
 
   <!-- Templates -->
@@ -25,10 +27,10 @@
      </ul>
    </div>
   </script>
-  <script type="text/template" id="searchResult-template">
-    <a class="song-result" href="" modelID=<%= id %>><%= title %></a>
+  <script type="text/template" id="search-result-template">
+    <p class="song-result" href="" data-id=<%= id %>><%= title %></p>
     <p class="artist"> <%= artist_name %></p>
-    <a href="#" class="more-song-info">+</a>
+    <a class="more-song-info">+</a>
     <div class="song-summary-container">
       <div class="song-summary-tempo">
         <span>Tempo: </span> <%= audio_summary.tempo %>
@@ -44,8 +46,30 @@
     </div>
   </script>
   <script type="text/template" id="stage-template">
+    <div class="stage-description">
+      <h1><%= title %></h1>
+      <h2><%= subtitle %></h2>
+    </div>
+    <div class="stage-module-container">
+      <div class="search-form">
+        <div class="search-type">
+        </div>
+        <div class="searchFieldContainer"></div>
+        <div>
+          <button type="button" class="removeField" disabled>Remove Field -</button>
+          <button type="button" class="addField">Add Field +</button>
+        </div>
+        <div>
+          <button type="button" class="search">Search</button>
+        </div>
+      </div>
+    </div>
+    <div class="loadingIndicator" style="display: none;">
+      <div class="eq-spinner"><i></i></div>
+    </div>
+    <div class="search-results"></div>
   </script>
-  <script type="text/template" id="searchType-template">
+  <script type="text/template" id="search-type-template">
     <p>View tracks based on: </p>
     <select single>
       <% _.each(options, function (data, option) { %>
@@ -57,33 +81,6 @@
 <body>
   <div id="heading">| Workout Playlist Generator</div>
   <div id="stage-container">
-    <div id="warmup" class="stage">
-      <div class="stage-description">
-        <h1>Warm Up</h1>
-        <h2>Select some songs to go along with your warm up.</h2>
-      </div>
-      <div class="stage-module-container">
-        <div class="search-container">
-          <div class="searchType">
-          </div>
-          <div class="searchFieldContainer"></div>
-          <div>
-            <button type="button" class="removeField" disabled>Remove Field -</button>
-            <button type="button" class="addField">Add Field +</button>
-          </div>
-          <div>
-            <!-- Add advanced search options -->
-          </div>
-          <div>
-            <button type="button" class="search">Search</button>
-          </div>
-        </div>
-      </div>
-      <div class="loadingIndicator" style="display: none;">
-        <div class="eq-spinner"><i></i></div>
-      </div>
-      <div class="searchResults"></div>
-    </div>
   </div>
 </body>
 </html>

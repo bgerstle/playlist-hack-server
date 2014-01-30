@@ -99,7 +99,7 @@ Search.SearchTypeView = Backbone.View.extend({
     this.trigger('change', $(event.target).val());
   },
   template: function() {
-    return _.template($('#searchType-template').html(), {
+    return _.template($('#search-type-template').html(), {
       options: this.searchTypes
     });
   },
@@ -148,7 +148,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
   searchTypeViewFactory: function() {
     var types = _.result(this, "searchTypeFactory");
     return new Search.SearchTypeView({
-      el: this.$('.searchType'),
+      el: this.$('.search-type'),
       types: types
     });
   },
@@ -291,7 +291,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
 
 Search.SearchResultView = Backbone.View.extend({
   tagName: 'li',
-  className: 'searchResult',
+  className: 'search-result',
   initialize: function(opts) {
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
@@ -301,7 +301,7 @@ Search.SearchResultView = Backbone.View.extend({
     this.playButton.$el.appendTo(this.$playButtonContainer);
   },
   template: function() {
-    return _.template($("#searchResult-template").html(), this.model.toJSON());
+    return _.template($("#search-result-template").html(), this.model.toJSON());
   },
   render: function() {
     // !!!: this is awful
