@@ -372,7 +372,6 @@ p.artist {
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
 	position: relative;
-	top: -606px!important;
 	left: 40px!important;
 	width: 302px!important;
 	background: rgba(0,0,0,0.9);
