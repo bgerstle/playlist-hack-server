@@ -127,7 +127,7 @@ var BaseSearchFormView = Backbone.View.extend({
     },
     searchTypeChanged: function (event) {
         this.reset();
-        this.render();
+        this.addField();
     },
     searchFieldChanged: function (event) {
         if (event.which === 13) {
