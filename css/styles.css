@@ -48,70 +48,70 @@ table {
 
 /* font */
 @font-face {
-    font-family: 'proxima_nova_rgbold';
-    src: url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.eot');
-    src: url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.woff') format('woff'),
-         url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.ttf') format('truetype'),
-         url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.svg#proxima_nova_rgbold') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'proxima_nova_rgbold';
+  src: url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.eot');
+  src: url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.woff') format('woff'),
+  url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.ttf') format('truetype'),
+  url('../fonts/mark_simonson_-_proxima_nova_bold-webfont.svg#proxima_nova_rgbold') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'proxima_nova_rgregular';
-    src: url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.eot');
-    src: url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.woff') format('woff'),
-         url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.ttf') format('truetype'),
-         url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.svg#proxima_nova_rgregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'proxima_nova_rgregular';
+  src: url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.eot');
+  src: url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.woff') format('woff'),
+  url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.ttf') format('truetype'),
+  url('../fonts/mark_simonson_-_proxima_nova_regular-webfont.svg#proxima_nova_rgregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'proxima_nova_ltlight';
-    src: url('../fonts/mark_simonson_-_proxima_nova_light.eot');
-    src: url('../fonts/mark_simonson_-_proxima_nova_light.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/mark_simonson_-_proxima_nova_light.woff') format('woff'),
-         url('../fonts/mark_simonson_-_proxima_nova_light.ttf') format('truetype'),
-         url('../fonts/mark_simonson_-_proxima_nova_light.svg#proxima_nova_ltlight') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'proxima_nova_ltlight';
+  src: url('../fonts/mark_simonson_-_proxima_nova_light.eot');
+  src: url('../fonts/mark_simonson_-_proxima_nova_light.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/mark_simonson_-_proxima_nova_light.woff') format('woff'),
+  url('../fonts/mark_simonson_-_proxima_nova_light.ttf') format('truetype'),
+  url('../fonts/mark_simonson_-_proxima_nova_light.svg#proxima_nova_ltlight') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'proxima_nova_ththin';
-    src: url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.eot');
-    src: url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.woff') format('woff'),
-         url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.ttf') format('truetype'),
-         url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.svg#proxima_nova_ththin') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'proxima_nova_ththin';
+  src: url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.eot');
+  src: url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.woff') format('woff'),
+  url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.ttf') format('truetype'),
+  url('../fonts/mark_simonson_-_proxima_nova_thin-webfont.svg#proxima_nova_ththin') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'proxima_nova_ltsemibold';
-    src: url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.eot');
-    src: url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.woff') format('woff'),
-         url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.ttf') format('truetype'),
-         url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.svg#proxima_nova_ltsemibold') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'proxima_nova_ltsemibold';
+  src: url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.eot');
+  src: url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.woff') format('woff'),
+  url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.ttf') format('truetype'),
+  url('../fonts/mark_simonson_-_proxima_nova_semibold-webfont.svg#proxima_nova_ltsemibold') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* General Styles*/
 
 body {
-    width: 100%;
-    height: 100%;
-    background: #ebedf2;
-    color: #6D7073;
-    font-family: 'proxima_nova_rgregular';
-    font-size: 17px;
-    margin: 0px;
+  width: 100%;
+  height: 100%;
+  background: #ebedf2;
+  color: #6D7073;
+  font-family: 'proxima_nova_rgregular';
+  font-size: 17px;
+  margin: 0px;
 }
 
 select,
@@ -138,44 +138,34 @@ a {
   margin-bottom: 10px;
 }
 
-.searchResults {
-	background: #fff;
-	border-radius: 0px 0px 10px 10px;
-	border: 1px solid #ccc;
-	float: left;
-	position: relative;
-	width: 300px;
-	overflow: scroll;
-}
-
 a.more-song-info {
 	font-size: 12px;
-color: #000;
-background: #84bd00;
-line-height: 20px;
-padding: 0px 7px;
-border-radius: 17px;
-position: absolute;
-right: 15px;
-top: 15px;
+  color: #000;
+  background: #84bd00;
+  line-height: 20px;
+  padding: 0px 7px;
+  border-radius: 17px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
 }
 
 a.more-song-info span {
   width: 14px;
-	background: url(../images/thin-down-arrow.png) no-repeat right center;
-	height: 19px;
-	display: inline-block;
-	float: right;
-	padding: 0 0 0 10px;
+  background: url(../images/thin-down-arrow.png) no-repeat right center;
+  height: 19px;
+  display: inline-block;
+  float: right;
+  padding: 0 0 0 10px;
 }
 
 a.song-result {
 	white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-height: 20px;
-display: block;
-padding-right: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 20px;
+  display: block;
+  padding-right: 30px;
 }
 
 p.artist {
@@ -205,24 +195,9 @@ p.artist {
 	line-height: 60px;
 }
 
-#segment-container {
+#stage-container {
 	padding: 40px;
 	overflow: hidden;
-}
-
-#segment-container .results li {
-	padding: 10px 15px;
-	position: relative;
-	overflow: hidden;
-	cursor: pointer;
-}
-
-#segment-container .results li:nth-child(odd) {
-	background: rgba(0,0,0,0.02);
-}
-
-#segment-container .results li:hover {
-	background: rgba(0,0,0,0.2)!important;
 }
 
 .stage {
@@ -231,28 +206,19 @@ p.artist {
 	position: relative;
 }
 
-.stage-container {
-	margin: 10px 0px;
-	overflow: hidden;
-}
-
 .loadingIndicator {
 	position: absolute;
 	background: rgba(0,0,0,0.8);
-	right: 0;
-	bottom: 0;
-	left: 0;
 	z-index: 10;
-	height: 503px;
 	border-radius: 0px 0px 10px 10px;
 }
 
 #preview {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 80px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 80px;
 }
 
 /* Throbber */
@@ -306,6 +272,49 @@ p.artist {
 }
 
 /* Search */
+
+#stage-container .results .searchResult:nth-child(odd) {
+  background: rgba(0,0,0,0.08);
+}
+
+#stage-container .results .searchResult:hover {
+  background: rgba(0,0,0,0.2)!important;
+}
+
+.results-container {
+  /*margin: 10px 0px;*/
+  overflow: hidden;
+}
+
+.searchResults {
+  background: #fff;
+  border-radius: 0px 0px 10px 10px;
+  border: 1px solid #ccc;
+  float: left;
+  position: relative;
+  width: 300px;
+  overflow: scroll;
+}
+
+.searchResult {
+  position: relative;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  width: 100%;
+  height: 30%;
+}
+
+.searchResult > * {
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.searchResult iframe {
+  padding-top: 10px;
+  width: -webkit-calc(100% - 10px);
+}
 
 .search-container {
 	background: #000;

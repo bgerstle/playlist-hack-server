@@ -80,6 +80,10 @@ var searchResultsView = new Search.SearchResultListView({
 searchResultsView.render();
 
 var $loadingIndicator = $('.loadingIndicator');
+$loadingIndicator.height(searchResultsView.$el.height());
+$loadingIndicator.width(searchResultsView.$el.width());
+
+var $loadingIndicator = $('.loadingIndicator');
 defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
 defaultSearchView.on('search:finished search:failed', $loadingIndicator.fadeOut, $loadingIndicator);
 

@@ -222,6 +222,7 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
 
 Search.SearchResultView = Backbone.View.extend({
   tagName: 'li',
+  className: 'searchResult',
   initialize: function (opts) {
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
@@ -231,21 +232,20 @@ Search.SearchResultView = Backbone.View.extend({
     return _.template($("#searchResult-template").html(), this.model.toJSON());
   },
   render: function () {
-      // !!!: this is awful
-      this.$el.html(this.template());
-      // this.playButton.hide();
-      this.$el.append(this.playButton.el);
-    },
-    isVisible: function () {
-      return this.$el.position().top >= 0 && this.$el.position().top < this.$el.parent().height();
-    },
-    renderPlayButton: function () {
-      if (this.playButton.model.has("tracks")) {
-        return;
-      }
-      this.playButton.model.set("tracks", [this.model.getSpotifyTrackID()]);
+    // !!!: this is awful
+    this.$el.html(this.template());
+    this.$el.append(this.playButton.el);
+  },
+  isVisible: function () {
+    return this.$el.position().top >= 0 && this.$el.position().top < this.$el.parent().height();
+  },
+  renderPlayButton: function () {
+    if (this.playButton.model.has("tracks")) {
+      return;
     }
-  });
+    this.playButton.model.set("tracks", [this.model.getSpotifyTrackID()]);
+  }
+});
 
 /*
 Lists the responses for a specific search.
@@ -265,15 +265,26 @@ Search.SearchResultListView = Backbone.View.extend({
     return _.template($('#searchResultList-template').html(), {songs: this.model.toJSON()});
   },
   render: function () {
+    // remove subviews manually in case they need to do any cleanup
+    _.invoke(this.resultSubviews, "remove");
+
+    // apply template
     this.$el.html(this.template());
+
+    // get results container
+    var $results = this.$(".results");
+
+    // append result subviews to results container
     this.resultSubviews = this.model.map(_.bind(function (song) {
       var subview = new Search.SearchResultView({
         model: song
       });
       subview.render();
-      this.$el.append(subview.$el);
+      subview.$el.appendTo($results);
       return subview;
     }, this));
+
+    // act on visible subviews
     this.checkVisibleSubviews();
   },
   didScroll: function (e) {
