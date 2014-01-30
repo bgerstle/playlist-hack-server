@@ -4,6 +4,10 @@ var root = this.exports || this;
 
 var Search = root.Search = {};
 
+///
+/// Search Parameters
+///
+
 Search.DefaultParams = function () {
   return _.clone({
     sort: 'energy-desc',
@@ -18,6 +22,10 @@ Search.DefaultParams = function () {
     target_tempo: 60
   });
 };
+
+///
+/// Search Parameters
+///
 
 /*
  View which accepts text from the user that specifies an artist or genre seed
@@ -34,129 +42,8 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
 });
 
 /*
- View which contains controls which allow the user to specify parameters for
- and execute a search.
- */
-Search.BaseSearchFormView = Backbone.View.extend({
-  searchFieldFactory: function () {
-    return new Search.ArtistGenreSearchField();
-  },
-  initialize: function (opts) {
-    this.resultSubviews = [];
-    this.$addFieldButton = this.$('button.addField');
-    this.$removeFieldButton = this.$('button.removeField');
-    this.$fieldContainer = this.$('.searchFieldContainer');
-    this.$searchButton = this.$('button.search');
-    this.maxFields = 5;
-  },
-  events: function () {
-    return {
-      'change .searchType select': 'searchTypeChanged',
-      'click .addField': 'addField',
-      'click .removeField': 'removeField',
-      'keyup input.searchField': 'searchFieldChanged',
-      "click button.search": 'search'
-    };
-  },
-  reset: function () {
-    _.invoke(this.resultSubviews, 'remove');
-    this.resultSubviews = [];
-  },
-  render: function () {
-    // skip any resultSubviews we've already appended
-    _.each(this.resultSubviews, _.bind(function (subview) {
-      if ($.contains(this.$fieldContainer, subview.el)) {
-        return;
-      }
-      this.$fieldContainer.append(subview.$el);
-    }, this));
-
-    this.$addFieldButton.prop("disabled", this.resultSubviews.length === this.maxFields);
-    this.$removeFieldButton.prop("disabled", this.resultSubviews.length <= 1);
-    this.$searchButton.prop("disabled", this.resultSubviews.length === 0);
-  },
-  searchTypeChanged: function (event) {
-    this.reset();
-    this.addField();
-  },
-  searchFieldChanged: function (event) {
-    if (event.which === 13) {
-      event.preventDefault();
-      this.search();
-      return false;
-    }
-    return true;
-  },
-  addField: function (event) {
-    if (this.resultSubviews.length === this.maxFields) {
-      return;
-    }
-
-    var newSubview = _.result(this, "searchFieldFactory");
-    newSubview.render();
-    this.resultSubviews.push(newSubview);
-    this.render();
-  },
-  removeField: function(event) {
-    if (this.resultSubviews.length === 1) {
-      return;
-    }
-
-    var lastSubview = this.resultSubviews.pop();
-    lastSubview.remove();
-    this.render();
-  },
-  getSearchType: function () {
-    return this.$(":checked[name='type']").val();
-  },
-  getSearchTypeToSeedKeyMap: function () {
-    return {
-      'artist': 'artist',
-      'artist-radio': 'artist',
-      'genre-radio': 'genre'
-    };
-  },
-  getSeedKeyForSearchType: function (type) {
-    var seedFieldName;
-    var map = this.getSearchTypeToSeedKeyMap();
-    if (_.has(map, type)) {
-      return map[type];
-    }
-    throw "Unexpected search type: " + type;
-  },
-  encodeSeedValue: function (value) {
-    return encodeURIComponent(value);
-  },
-  getEncodedSeedValues: function () {
-    return _.chain(this.resultSubviews).map(function (subview) {
-      return subview.serialize();
-    }).map(this.encodeSeedValue).value();
-  },
-  serialize: function () {
-    var params = {type: this.getSearchType()};
-    var seedFieldName = this.getSeedKeyForSearchType(params.type);
-    params[seedFieldName] = this.getEncodedSeedValues();
-    return params;
-  },
-  search: function (e) {
-    var params = _.defaults(this.serialize(), Search.DefaultParams);
-    this.trigger('search:started', params);
-    return this.model.deferredFetch({
-      playlistParams: params,
-      reset: true,
-      silet: false
-    }).done(_.bind(function (collection, response, options) {
-      this.trigger('search:finished');
-      console.log("fetch response:");
-      console.log(response);
-    }, this))
-    .fail(_.bind(function (collection, response, options) {
-      this.trigger('search:failed');
-      alert(JSON.stringify(response));
-    }, this));
-  }
-});
-
+ Field which provides autocomplete suggestions for combined song title & artist.
+*/
 Search.SongSearchField = Search.ArtistGenreSearchField.extend({
   initialize: function (opts) {
     _.bindAll(this, 'autoCompleteSourceCallback', 'autoCompleteSelected');
@@ -197,26 +84,207 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
   }
 });
 
+Search.SearchTypeView = Backbone.View.extend({
+  initialize: function (opts) {
+    if (!opts || !opts.types) {
+      throw "Must specify search types!";
+    }
+    this.searchTypes = opts.types;
+  },
+  events: {
+    'change select': 'typeSelected'
+  },
+  typeSelected: function (event) {
+    this.trigger('change', $(event.target).val());
+  },
+  template: function () {
+    return _.template($('#searchType-template').html(), {
+      options: this.searchTypes
+    });
+  },
+  render: function () {
+    this.$el.html(this.template());
+  },
+  serialize: function () {
+    var $selected = this.$(":selected");
+    return {
+      value: $selected.val(),
+      seed: $selected.attr('name')
+    };
+  },
+  select: function (type) {
+    $("option[value='" + type + "']").prop("selected", true);
+  }
+});
+
+///
+/// Search Form
+///
+
+/*
+ View which contains controls which allow the user to tweak and execute a search.
+ */
+Search.BaseSearchFormView = Backbone.View.extend({
+  searchFieldFactory: function () {
+    return new Search.ArtistGenreSearchField();
+  },
+  searchTypeFactory: function () {
+    return {
+       'artist-radio': {
+          text: "Artist Radio",
+          seed: 'artist'
+       },
+       'artist': {
+          text: "Artist",
+          seed: 'artist'
+       },
+       'genre-radio': {
+          text: "Genre",
+          seed: 'genre'
+       }
+    };
+  },
+  searchTypeViewFactory: function () {
+    var types = _.result(this, "searchTypeFactory");
+    return new Search.SearchTypeView({
+      el: this.$('.searchType'),
+      types: types
+    });
+  },
+  initialize: function (opts) {
+    this.searchTypeView = _.result(this, "searchTypeViewFactory");
+    this.searchTypeView.on('change', this.searchTypeChanged, this);
+    // until search type is modelized, only render it once, otherwise the
+    // select will always be reset
+    this.searchTypeView.render();
+
+    this.$fieldContainer = this.$('.searchFieldContainer');
+    this.fieldViews = [];
+
+    this.$addFieldButton = this.$('button.addField');
+    this.$removeFieldButton = this.$('button.removeField');
+
+    this.$searchButton = this.$('button.search');
+    this.maxFields = 5;
+  },
+  events: function () {
+    return {
+      'click .addField': 'addField',
+      'click .removeField': 'removeField',
+      'keyup input.searchField': 'searchFieldChanged',
+      "click button.search": 'search'
+    };
+  },
+  reset: function () {
+    _.invoke(this.fieldViews, 'remove');
+    this.fieldViews = [];
+  },
+  render: function () {
+    // skip any fieldViews we've already appended
+    _.each(this.fieldViews, _.bind(function (subview) {
+      if ($.contains(this.$fieldContainer, subview.el)) {
+        return;
+      }
+      this.$fieldContainer.append(subview.$el);
+    }, this));
+
+    this.$addFieldButton.prop("disabled", this.fieldViews.length === this.maxFields);
+    this.$removeFieldButton.prop("disabled", this.fieldViews.length <= 1);
+    this.$searchButton.prop("disabled", this.fieldViews.length === 0);
+  },
+  searchTypeChanged: function (event) {
+    this.reset();
+    this.addField();
+  },
+  getSearchType: function () {
+    return this.searchTypeView.serialize().value;
+  },
+  searchFieldChanged: function (event) {
+    if (event.which === 13) {
+      event.preventDefault();
+      this.search();
+      return false;
+    }
+    return true;
+  },
+  addField: function (event) {
+    if (this.fieldViews.length === this.maxFields) {
+      return;
+    }
+
+    var newSubview = _.result(this, "searchFieldFactory");
+    newSubview.render();
+    this.fieldViews.push(newSubview);
+    this.render();
+  },
+  removeField: function(event) {
+    if (this.fieldViews.length === 1) {
+      return;
+    }
+
+    var lastSubview = this.fieldViews.pop();
+    lastSubview.remove();
+    this.render();
+  },
+  encodeSeedValue: function (value) {
+    return encodeURIComponent(value);
+  },
+  getEncodedFieldValues: function () {
+    return _.chain(this.fieldViews)
+    .map(function (subview) {
+      return subview.serialize();
+    })
+    .map(this.encodeSeedValue)
+    .value();
+  },
+  serialize: function () {
+    // TODO: modelize this so we can do validation
+    var searchType = this.searchTypeView.serialize();
+    var params = {type: searchType.value};
+    params[searchType.seed] = this.getEncodedFieldValues();
+    return params;
+  },
+  search: function (e) {
+    var params = _.defaults(this.serialize(), Search.DefaultParams);
+    this.trigger('search:started', params);
+    return this.model.deferredFetch({
+      playlistParams: params,
+      reset: true,
+      silent: false
+    }).done(_.bind(function (collection, response, options) {
+      this.trigger('search:finished');
+      console.log("fetch response:");
+      console.log(response);
+    }, this))
+    .fail(_.bind(function (collection, response, options) {
+      this.trigger('search:failed');
+      alert(JSON.stringify(response));
+    }, this));
+  }
+});
+
 Search.SearchFormView = Search.BaseSearchFormView.extend({
   searchFieldFactory: function () {
     if (this.getSearchType() !== 'song-radio') {
       return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
     }
-
     return new Search.SongSearchField({
       model: new EchoNest.SearchSongModel()
     });
+  },
+  searchTypeFactory: function () {
+    return _.defaults({
+      'song-radio': {
+        text: "Song Radio",
+        seed: 'song_id'
+      }
+    }, Search.BaseSearchFormView.prototype.searchTypeFactory.call(this));
   },
   initialize: function (opts) {
     Search.BaseSearchFormView.prototype.initialize.call(this, opts);
     this.maybeValidateSearchField = _.debounce(this.maybeValidateSearchField, 500);
     this.songSearches = {};
     this.songIDs = [];
-  },
-  getSearchTypeToSeedKeyMap: function () {
-    return _.extend(Search.BaseSearchFormView.prototype.getSearchTypeToSeedKeyMap.call(this), {
-      'song-radio': 'song_id'
-    });
   }
 });
 

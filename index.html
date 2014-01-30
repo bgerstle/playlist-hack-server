@@ -24,36 +24,49 @@
      <ul class="results">
      </ul>
    </div>
- </script>
- <script type="text/template" id="searchResult-template">
-  <a class="song-result" href="" modelID=<%= id %>><%= title %></a> <p class="artist"> <%= artist_name %></p>
-  <a href="#" class="more-song-info">+</a>
-  <div class="song-summary-container">
-    <div class="song-summary-tempo"><span>Tempo: </span> <%= audio_summary.tempo %></div>
-    <div class="song-summary-energy"><span>Energy: </span> <%= audio_summary.energy %></div>
-    <div class="song-summary-danceability"><span>Danceability:</span> <%= audio_summary.danceability %></div>
-    <div class="song-summary-hotttnesss"><span>Hotttnesss:</span> <%= song_hotttnesss %></div>
-  </div>
-</script>
+  </script>
+  <script type="text/template" id="searchResult-template">
+    <a class="song-result" href="" modelID=<%= id %>><%= title %></a>
+    <p class="artist"> <%= artist_name %></p>
+    <a href="#" class="more-song-info">+</a>
+    <div class="song-summary-container">
+      <div class="song-summary-tempo">
+        <span>Tempo: </span> <%= audio_summary.tempo %>
+      </div>
+      <div class="song-summary-energy">
+        <span>Energy: </span> <%= audio_summary.energy %>
+      </div>
+      <div class="song-summary-danceability">
+        <span>Danceability:</span> <%= audio_summary.danceability %>
+      </div>
+      <div class="song-summary-hotttnesss">
+        <span>Hotttnesss:</span> <%= song_hotttnesss %></div>
+    </div>
+  </script>
+  <script type="text/template" id="stage-template">
+  </script>
+  <script type="text/template" id="searchType-template">
+    <p>View tracks based on: </p>
+    <select single>
+      <% _.each(options, function (data, option) { %>
+        <option name=<%= data.seed %> value=<%= option %>>
+          <%= data.text %>
+        </option>
+      <% }); %>
+    </select>
+  </script>
 </head>
 <body>
   <div id="heading">| Workout Playlist Generator</div>
   <div id="stage-container">
     <div id="warmup" class="stage">
       <div class="stage-description">
-        <h1>Warmup</h1>
-        <h2>Search for tracks to add to your warm up stage</h2>
+        <h1>Warm Up</h1>
+        <h2>Select some songs to go along with your warm up.</h2>
       </div>
       <div class="stage-module-container">
         <div class="search-container">
           <div class="searchType">
-            <p>View tracks based on: </p>
-            <select>
-              <option name="type" value="artist-radio">Artist Radio</option>
-              <option name="type" value="song-radio">Song Radio</option>
-              <option name="type" value="artist">Artist</option>
-              <option name="type" value="genre-radio">Genre</option>
-            </select>
           </div>
           <div class="searchFieldContainer"></div>
           <div>

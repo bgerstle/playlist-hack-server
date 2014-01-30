@@ -37,20 +37,20 @@ function updateSelectUI(e) {
 
 $('.searchResults').css('height', $(window).height() - 300);
 
-var defaultPlaylist = new EchoNest.StaticPlaylist([],{
+var defaultPlaylist = new EchoNest.StaticPlaylist([], {
   comparator: function (a, b) {
         // sort by song energy, descending
         return b.get("audio_summary").energy - a.get("audio_summary").energy;
-      }
-    });
+  }
+});
+
 var defaultSearchView = new Search.SearchFormView({
   el: $('#warmup .search-container'),
   model: defaultPlaylist
 });
-
+defaultSearchView.$(".searchType select option[value='artist-radio']").attr("selected", true);
 defaultSearchView.addField();
-defaultSearchView.$(".searchType > [value='artist-radio']").prop("selected", true);
-defaultSearchView.resultSubviews[0].$el.attr("value", "The Black Keys");
+defaultSearchView.fieldViews[0].$el.attr("value", "The Black Keys");
 defaultSearchView.search();
 
 var searchResultsView = new Search.SearchResultListView({
@@ -61,7 +61,11 @@ var searchResultsView = new Search.SearchResultListView({
 searchResultsView.render();
 
 var $loadingIndicator = $('.loadingIndicator');
-defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
-defaultSearchView.on('search:finished search:failed', $loadingIndicator.fadeOut, $loadingIndicator);
+defaultSearchView.on('search:started',
+                     $loadingIndicator.fadeIn,
+                     $loadingIndicator);
+defaultSearchView.on('search:finished search:failed',
+                     $loadingIndicator.fadeOut,
+                     $loadingIndicator);
 
 });
