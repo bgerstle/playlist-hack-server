@@ -398,9 +398,7 @@ p.artist {
 	cursor: pointer;
 }
 
-.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover
-
-a.ui-state-focus {
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all .ui-corner-all.ui-state-focus {
 	color: red!important;
 }
 
