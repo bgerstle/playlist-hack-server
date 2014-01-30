@@ -1,20 +1,5 @@
 $().ready(function () {
 
-var playbuttonModel = new PlayButtonModel();
-var playbuttonView = new PlayButtonView({
-  el: $('#preview'),
-  id: 'preview',
-  model: playbuttonModel
-});
-
-playbuttonModel.set({
-  title: "",
-  view: playbuttonModel.supportedParameters.view.coverArt,
-  theme: playbuttonModel.supportedParameters.theme.white
-});
-
-$('body').append(playbuttonView.el);
-
 // Nicole's Crap
 $(document).delegate('.more-song-info', 'click', showSongSummary);
 $(document).delegate('.search-container select', 'change', updateSelectUI);
@@ -78,10 +63,6 @@ var searchResultsView = new Search.SearchResultListView({
   searchView: defaultSearchView
 });
 searchResultsView.render();
-
-var $loadingIndicator = $('.loadingIndicator');
-$loadingIndicator.height(searchResultsView.$el.height());
-$loadingIndicator.width(searchResultsView.$el.width());
 
 var $loadingIndicator = $('.loadingIndicator');
 defaultSearchView.on('search:started', $loadingIndicator.fadeIn, $loadingIndicator);
