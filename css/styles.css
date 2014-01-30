@@ -144,6 +144,7 @@ a {
 	background: #000 url(../images/logo-navbar.png) no-repeat 40px center;
 	font-size: 25px;
 	line-height: 60px;
+	min-width: 530px;
 }
 
 #stage-container {
@@ -365,4 +366,30 @@ p.artist {
   50% { height: 20px }
   66.7% { height: 20px }
   100% { height: 1px }
+}
+
+/* Auto Complete */
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+	position: relative;
+	top: -606px!important;
+	left: 40px!important;
+	width: 302px!important;
+	background: rgba(0,0,0,0.9);
+	border-radius: 0px 0px 10px 10px;
+	float: left;
+	max-height: 45vh;
+	overflow: scroll;
+}
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:first-of-type {
+	margin-top: 10px;
+}
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
+	padding: 10px 16px;
+	border-bottom: 1px solid #222;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
