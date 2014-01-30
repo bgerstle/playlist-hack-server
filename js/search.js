@@ -4,6 +4,29 @@ var root = this.exports || this;
 
 var Search = root.Search = {};
 
+// Nicole's Crap
+// $(document).delegate('.search-form select', 'change', updateSelectUI);
+
+// $('.search-type').mouseover(function (e) {
+//   $(e.target).addClass('hover');
+// }).mouseout(function (e) {
+//   $(e.target).removeClass('hover');
+// });
+
+// var updateSelectUI = function (e) {
+//   $('.search-type').removeClass('hover');
+
+//   var selectedText = $('.search-form select').find(":selected").text();
+
+//   if (selectedText === 'Artist' || selectedText === 'Genre') {
+//     $('.search-type').addClass('moveArrowDown');
+//   } else {
+//     $('.search-type').removeClass('moveArrowDown');
+//   }
+// };
+
+// $('.search-results').css('height', $(window).height() - 300);
+
 ///
 /// Search Parameters
 ///
@@ -297,6 +320,8 @@ Search.SearchResultView = Backbone.View.extend({
       model: new PlayButtonModel()
     });
 
+    _.bindAll(this, "showSongSummary");
+
     this.$playButtonContainer = $('<div class="iframe-container"></div>');
     this.playButton.$el.appendTo(this.$playButtonContainer);
   },
@@ -307,6 +332,16 @@ Search.SearchResultView = Backbone.View.extend({
     // !!!: this is awful
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
+    this.$('.more-song-info').click(this.showSongSummary);
+  },
+  showSongSummary: function (e) {
+    if (!this.$('.song-summary-container').hasClass('selected')) {
+      this.$('.song-summary-container').addClass('selected');
+      $(e.target).html('-').css('padding', '0px 8px');
+    } else {
+      this.$('.song-summary-container').removeClass('selected');
+      $(e.target).html('+').css('padding', '0px 7px');
+    }
   },
   isVisible: function($superview) {
     if (!this.$el.parent()) {
