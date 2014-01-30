@@ -59,7 +59,8 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
     this.model.deferredFetch({
       songParams: {
         combined: encodeURIComponent(request.term),
-        bucket: 'song_hotttnesss'
+        bucket: 'song_hotttnesss',
+        song_type: 'studio'
       },
       reset: true,
       silent: false
@@ -244,7 +245,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     return params;
   },
   search: function (e) {
-    var params = _.defaults(this.serialize(), Search.DefaultParams);
+    var params = _.defaults(this.serialize(), _.result(Search, "DefaultParams"));
     this.trigger('search:started', params);
     return this.model.deferredFetch({
       playlistParams: params,
@@ -306,8 +307,11 @@ Search.SearchResultView = Backbone.View.extend({
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
   },
-  isVisible: function () {
-    return this.$el.position().top >= 0 && this.$el.position().top < this.$el.parent().height();
+  isVisible: function ($superview) {
+    if (!this.$el.parent()) {
+      return false;
+    }
+    return (this.$el.position().top >= 0) && (this.$el.position().top < $superview.height());
   },
   renderPlayButton: function () {
     if (this.playButton.model.has("tracks")) {
@@ -380,7 +384,7 @@ Search.SearchResultListView = Backbone.View.extend({
     var firstVisibleSubview = -1;
     var lastVisibleSubview = -1;
     for (var i = 0; i < this.resultSubviews.length; i++) {
-      if (!this.resultSubviews[i].isVisible()) {
+      if (!this.resultSubviews[i].isVisible(this.$el)) {
         if (firstVisibleSubview >= 0) {
           break;
         }
