@@ -218,12 +218,6 @@ var SongSearchField = ArtistGenreSearchField.extend({
             source: this.autoCompleteSourceCallback,
             select: this.autoCompleteSelected
         });
-        this.$el.autocomplete._renderItem = function (ul, item) {
-              return $( "<li>" )
-                     .attr( "data-value", item.label )
-                     .append( $( "<a>" ).text( item.label ) )
-                     .appendTo( ul );
-        };
     },
     autoCompleteSourceCallback: function (request, callback) {
         this.model.deferredFetch({
@@ -236,8 +230,8 @@ var SongSearchField = ArtistGenreSearchField.extend({
         }).done(function (collection, json, options) {
             callback(collection.map(function (model) {
                 return {
-                    label: model.get("title") + " by " + model.get('artist_name'),
-                    value: model.get("id")
+                    value: model.get("title") + " by " + model.get('artist_name'),
+                    data_id: model.get("id")
                 };
             }));
         });
@@ -245,7 +239,7 @@ var SongSearchField = ArtistGenreSearchField.extend({
     autoCompleteSelected: function (event, ui) {
         event.preventDefault();
         this.$el.val(ui.item.label);
-        this.$el.attr("data-id", ui.item.value);
+        this.$el.attr("data-id", ui.item.data_id);
         return false;
     },
     serialize: function () {
