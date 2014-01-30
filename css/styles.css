@@ -418,3 +418,7 @@ p.artist {
 	font-family: 'proxima_nova_rgregular';
 	font-size: 15px;
 }
+
+button[disabled] {
+	display: none;
+}
