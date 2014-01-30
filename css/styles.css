@@ -393,3 +393,18 @@ p.artist {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover {
+	background: #84bd00;
+	cursor: pointer;
+}
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover
+
+a.ui-state-focus {
+	color: red!important;
+}
+
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover a {
+	color: #000;
+}
