@@ -401,17 +401,6 @@ Search.SearchResultListView = Backbone.View.extend({
     var visibleSubviews = this.resultSubviews.slice(firstVisibleSubview, lastVisibleSubview + 1);
     console.log("rendering play buttons for subviews " + _.first(visibleSubviews).model.get("title") + " to " + _.last(visibleSubviews).model.get("title"));
     _.invoke(visibleSubviews, "renderPlayButton");
-  },
-  events: function () {
-    return {
-      'click a.song-result': 'preview'
-    };
-  },
-  preview: function (e) {
-    e.preventDefault();
-    var modelID = $(e.target).attr('modelID');
-    var trackID = this.model.get(modelID).getSpotifyTrackID();
-    playbuttonModel.set("tracks", [trackID]);
   }
 });
 })(this);
