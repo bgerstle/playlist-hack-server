@@ -33,7 +33,8 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
   tagName: "input",
   className: "searchField",
   attributes: {
-    type: "text"
+    type: "text",
+    placeholder: "Click here to begin searching!"
   },
   serialize: function() {
     return this.$el.val();

@@ -405,3 +405,16 @@ p.artist {
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover a {
 	color: #000;
 }
+
+.searchField {
+	border-width: 0px 0px 1px 0px;
+	padding: 10px;
+	margin: 10px 0px;
+	border-color: #444;
+	background: rgba(255,255,255,0.19);
+	width: 252px;
+	color: #999;
+	outline: none;
+	font-family: 'proxima_nova_rgregular';
+	font-size: 15px;
+}
