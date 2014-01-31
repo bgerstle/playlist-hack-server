@@ -544,3 +544,12 @@ button:hover {
 	box-shadow: -1px 1px 21px #000;
 	z-index: 10;
 }
+
+#rightSidebar .loadingIndicator {
+	height: 100%;
+	border-radius: 0px;
+}
+
+#rightSidebar .loadingIndicator .eq-spinner {
+	height: 100px;
+}
