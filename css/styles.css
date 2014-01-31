@@ -529,3 +529,15 @@ button:hover {
 	cursor: pointer;
 	background-size: 85%;
 }
+
+#rightSidebar {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 250px;
+	background: red;
+	border-left: 1px solid #999;
+	box-shadow: -1px 1px 21px #000;
+	z-index: 10;
+}
