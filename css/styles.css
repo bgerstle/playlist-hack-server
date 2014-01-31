@@ -500,7 +500,7 @@ button:hover {
 
 .stage-picker h1 {
   font-size: 24px;
-  margin: 0px 10px 20px;
+  margin: 0px 10px 15px;
   color: #000;
   text-align: center;
 }
@@ -510,7 +510,7 @@ button:hover {
 	position: absolute;
 	right: 0px;
 	width: 200px;
-	margin-top: 185px;
+	margin-top: 230px;
 }
 
 .addStageConainer select {
