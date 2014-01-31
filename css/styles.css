@@ -541,7 +541,7 @@ button:hover {
 	top: 0px;
 	bottom: 0px;
 	width: 300px;
-	background: red;
+	background: rgb(42,42,41);
 	border-left: 1px solid #999;
 	box-shadow: -1px 1px 21px #000;
 	z-index: 10;
