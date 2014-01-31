@@ -4,41 +4,6 @@ var root = this;
 var Stage = root.Stage = {};
 
 ///
-/// Global Song Selection
-///
-
-Stage.GlobalSelectionsModel = Backbone.Collection.extend({
-  listenToSongsFromCollection: function (songCollection) {
-    songCollection.on({
-      'add': this.listenForSongSelection,
-      'remove': this.stopListeningForSongSelection
-    }, this);
-  },
-  listenForSongSelection: function (song) {
-    this.listenTo(song, 'change:selected', this.addOrRemoveSong, this);
-  },
-  stopListeningForSongSelection: function (song) {
-    this.stopListening(song);
-  },
-  addOrRemoveSong: function (song, selected, options) {
-    // TODO: handle uniquing of songs?
-    if (selected) {
-      this.add(song);
-    } else {
-      this.remove(song);
-    }
-  }
-});
-
-var globalSelectionsModel = null;
-Stage.getGlobalSelectionsModel = function () {
-  if (!globalSelectionsModel) {
-    globalSelectionsModel = new Stage.GlobalSelectionsModel();
-  }
-  return globalSelectionsModel;
-};
-
-///
 /// Stage
 ///
 
@@ -53,7 +18,20 @@ Stage.Model = Backbone.Model.extend({
         }
       });
     }
-    Stage.getGlobalSelectionsModel().listenToSongsFromCollection(this.playlist);
+    this.playlist.on('all', this.playlistEventTrampoline, this);
+  },
+  playlistEventTrampoline: function (eventName) {
+    var args = _.toArray(arguments).slice(1);
+    // namespace the playlist event name, and add this as an argument
+    var namespacedEventName = 'playlist:'.concat(eventName);
+    args.unshift(namespacedEventName, this);
+    this.trigger.apply(this, args);
+  },
+  getSelectedSongs: function () {
+    return this.playlist.where({selected: true});
+  },
+  getDuration: function () {
+
   }
 });
 
@@ -64,28 +42,29 @@ Stage.View = Backbone.View.extend({
     this.render();
 
     // render subviews
-    var defaultSearchView = new Search.SearchFormView({
+    var form = new Search.SearchFormView({
       el: this.$('.search-form'),
-      model: this.model.playlist
+      model: this.model.playlist,
+      searchDefaults: this.model.get("searchDefaults")
     });
-    defaultSearchView
-    .$(".search-type select option[value='song-radio']")
+    form
+    .$(".search-type select option[value='artist']")
     .attr("selected", true);
-    defaultSearchView.addField();
+    form.addField();
 
     var searchResultsView = new Search.SearchResultListView({
       el: this.$('.search-results'),
       model: this.model.playlist,
-      searchView: defaultSearchView
+      searchView: form
     });
     searchResultsView.render();
     var $loadingIndicator = this.$('.loadingIndicator');
-    defaultSearchView.on('search:started',
-                         $loadingIndicator.fadeIn,
-                         $loadingIndicator);
-    defaultSearchView.on('search:finished search:failed',
-                         $loadingIndicator.fadeOut,
-                         $loadingIndicator);
+    form.on('search:started',
+            $loadingIndicator.fadeIn,
+            $loadingIndicator);
+    form.on('search:finished search:failed',
+            $loadingIndicator.fadeOut,
+            $loadingIndicator);
   },
   template: function () {
     return _.template($('#stage-template').html(),
@@ -164,22 +143,60 @@ Stage.ContainerView = Backbone.View.extend({
 /// Picker
 ///
 
+var baseSearchDefaults = {
+  sort: 'energy-desc',
+  song_selection: 'energy-top',
+  song_type: 'studio',
+  results: 50,
+  variety: 0.3,
+  target_song_hotttnesss: 0.3,
+  target_artist_hotttnesss: 0.3
+};
+
 Stage.PredefinedModelAttributes = {
   warmup: {
     title: 'Warm Up',
-    subtitle: 'Loosen up with a light, upbeat song.'
+    subtitle: 'Loosen up with a light, upbeat song.',
+    searchDefaults: _.defaults({
+      min_energy: 0.2,
+      max_energy: 0.6,
+      min_tempo: 50,
+      max_tempo: 120,
+      min_danceability: 0.6
+    }, baseSearchDefaults),
+    className: 'warmup'
   },
   sprint: {
     title: 'Sprint',
-    subtitle: 'Put your pedals to the metal!'
+    subtitle: 'Put your pedals to the metal!',
+    searchDefaults: _.defaults({
+      min_energy: 0.7,
+      min_tempo: 110,
+      min_danceability: 0.7
+    }, baseSearchDefaults),
+    className: 'warmup'
   },
   climb: {
     title: 'Climb',
-    subtitle: 'Feel the burn, all the way to the top.'
+    subtitle: 'Feel the burn, all the way to the top.',
+    searchDefaults: _.defaults({
+      min_energy: 0.1,
+      min_tempo: 40,
+      max_tempo: 70,
+      min_danceability: 0.3
+    }, baseSearchDefaults),
+    className: 'warmup'
   },
   cool_down: {
     title: 'Cool Down',
-    subtitle: 'Time to recover.'
+    subtitle: 'Time to recover.',
+    searchDefaults: _.defaults({
+      min_energy: 0.3,
+      min_tempo: 60,
+      max_tempo: 110,
+      min_danceability: 0.4
+    }, baseSearchDefaults),
+    className: 'warmup'
   }
 };
 

@@ -8,24 +8,6 @@ var Search = root.Search = {};
 /// Search Parameters
 ///
 
-Search.DefaultParams = function() {
-  return _.clone({
-    sort: 'energy-desc',
-    song_selection: 'energy-top',
-    song_type: 'studio',
-    results: 50,
-    variety: 0.3,
-    min_energy: 0.2,
-    min_danceability: 0.4,
-    target_song_hotttnesss: 0.8,
-    target_artist_hotttnesss: 0.6
-  });
-};
-
-///
-/// Search Parameters
-///
-
 /*
  View which accepts text from the user that specifies an artist or genre seed
  */
@@ -58,7 +40,7 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
         bucket: 'song_hotttnesss',
         song_type: 'studio'
       },
-      reset: true,
+      remove: true,
       silent: false
     }).done(function(collection, json, options) {
       callback(collection.map(function(model) {
@@ -178,6 +160,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     });
   },
   initialize: function(opts) {
+    this.searchDefaults = opts.searchDefaults;
     this.searchTypeView = _.result(this, "searchTypeViewFactory");
     this.searchTypeView.on('change', this.searchTypeChanged, this);
     // until search type is modelized, only render it once, otherwise the
@@ -276,11 +259,11 @@ Search.BaseSearchFormView = Backbone.View.extend({
     return params;
   },
   search: function(e) {
-    var params = _.defaults(this.serialize(), _.result(Search, "DefaultParams"));
+    var params = _.defaults(this.serialize(), this.searchDefaults);
     this.trigger('search:started', params);
     return this.model.deferredFetch({
       playlistParams: params,
-      reset: true,
+      remove: true,
       silent: false
     }).done(_.bind(function(collection, response, options) {
       this.trigger('search:finished');
@@ -343,6 +326,7 @@ Search.SearchResultView = Backbone.View.extend({
     // !!!: this is awful
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
+    this.updateSelectedState(this.model, this.model.get("selected"));
   },
   click: function (event) {
     event.preventDefault();

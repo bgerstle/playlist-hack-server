@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   $().ready(function() {
 
     // setup stages
@@ -36,13 +37,23 @@
     playlistButtonView.render();
     $('#rightSidebar').append(playlistButtonView.el);
 
-    Stage
-    .getGlobalSelectionsModel()
-    .on('add remove',
-        function (song, collection, options) {
-          playlistButtonModel.set("tracks", collection.map(function (model) {
-            return model.getSpotifyTrackID();
-          }));
+    stages
+    .on('playlist:sort playlist:change:selected',
+        function () {
+          var newTracks = [];
+          if (stages.length) {
+            newTracks = _.chain(stages.models)
+            .map(function (stage) {
+              // get selected songs, grouped by stage
+              return stage.getSelectedSongs();
+            })
+            .flatten()
+            .map(function (song) {
+              return song.getSpotifyTrackID();
+            })
+            .value();
+          }
+          playlistButtonModel.set("tracks", newTracks);
         });
   });
 })(this);
