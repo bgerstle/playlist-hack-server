@@ -26,30 +26,12 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
 /*
  Field which provides autocomplete suggestions for combined song title & artist.
 */
-Search.SongSearchField = Search.ArtistGenreSearchField.extend({
+Search.AutocompleteSearchField = Search.ArtistGenreSearchField.extend({
   initialize: function(opts) {
     _.bindAll(this, 'autoCompleteSourceCallback', 'autoCompleteSelected');
     this.model.comparator = function(a, b) {
       return b.get("song_hotttnesss") - a.get("song_hotttnesss");
     };
-  },
-  autoCompleteSourceCallback: function(request, callback) {
-    this.model.deferredFetch({
-      songParams: {
-        combined: encodeURIComponent(request.term),
-        bucket: 'song_hotttnesss',
-        song_type: 'studio'
-      },
-      remove: true,
-      silent: false
-    }).done(function(collection, json, options) {
-      callback(collection.map(function(model) {
-        return {
-          value: model.get("title") + " by " + model.get('artist_name'),
-          data_id: model.get("id")
-        };
-      }));
-    });
   },
   autoCompleteSelected: function(event, ui) {
     event.preventDefault();
@@ -73,6 +55,46 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
     if (_.has(this.$el, "autocomplete")) {
       this.$el.autocomplete.destroy();
     }
+  }
+});
+
+Search.SongSearchField = Search.AutocompleteSearchField.extend({
+  autoCompleteSourceCallback: function(request, callback) {
+    this.model.deferredFetch({
+      songParams: {
+        combined: encodeURIComponent(request.term),
+        bucket: 'song_hotttnesss',
+        song_type: 'studio'
+      },
+      remove: true,
+      silent: false
+    }).done(function(collection, json, options) {
+      callback(collection.map(function(model) {
+        return {
+          value: model.get("title") + " by " + model.get('artist_name'),
+          data_id: model.get("id")
+        };
+      }));
+    });
+  }
+});
+
+Search.ArtistSearchField = Search.AutocompleteSearchField.extend({
+  autoCompleteSourceCallback: function(request, callback) {
+    this.model.deferredFetch({
+      artistParams: {
+        name: encodeURIComponent(request.term)
+      },
+      remove: true,
+      silent: false
+    }).done(function(collection, json, options) {
+      callback(collection.map(function(model) {
+        return {
+          value: model.get("name"),
+          data_id: model.get("id")
+        };
+      }));
+    });
   }
 });
 
@@ -144,10 +166,6 @@ Search.BaseSearchFormView = Backbone.View.extend({
     return {
        'artist-radio': {
           text: "Artist Radio",
-          seed: 'artist'
-       },
-       'artist': {
-          text: "Artist",
           seed: 'artist'
        },
        'genre-radio': {
@@ -283,19 +301,30 @@ Search.BaseSearchFormView = Backbone.View.extend({
 
 Search.SearchFormView = Search.BaseSearchFormView.extend({
   searchFieldFactory: function() {
-    if (this.getSearchType() !== 'song-radio') {
-      return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
+    switch (this.getSearchType()) {
+      case 'song-radio':
+        return new Search.SongSearchField({
+          model: new EchoNest.SearchSongModel()
+        });
+      case 'artist':
+        return new Search.ArtistSearchField({
+          model: new EchoNest.SearchArtistModel()
+        });
+      default: {
+        return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
+      }
     }
-    return new Search.SongSearchField({
-      model: new EchoNest.SearchSongModel()
-    });
   },
   searchTypeFactory: function() {
     return _.defaults({
       'song-radio': {
         text: "Song Radio",
         seed: 'song_id'
-      }
+      },
+      'artist': {
+          text: "Artist",
+          seed: 'artist_id'
+       }
     }, Search.BaseSearchFormView.prototype.searchTypeFactory.call(this));
   },
   initialize: function(opts) {

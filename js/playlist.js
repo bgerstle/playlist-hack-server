@@ -77,6 +77,38 @@ EchoNest.SongModel = Backbone.Model.extend({
   }
 });
 
+EchoNest.ArtistModel = Backbone.Model.extend({});
+
+EchoNest.SearchArtistModel = Backbone.Collection.extend({
+  model: EchoNest.ArtistModel,
+  initialize: function (attrs, options) {
+    if (options && options.artistParams) {
+      this.artistParams = options.artistParams;
+    }
+  },
+  url: function () {
+    return endpoint + '/artist/search/' + queryStringFromParams(_.defaults(this.artistParams || {}, {
+      api_key: apiKey,
+      // required for cross-domain requests
+      format: 'jsonp'
+    }));
+  },
+  fetch: function (options) {
+    if (options && options.artistParams) {
+      this.artistParams = options.artistParams;
+    }
+    return Backbone.Collection.prototype.fetch.call(this, _.defaults(options || {}, {
+      // required for cross-domain requests
+      dataType: 'jsonp',
+      callback: 'callback'
+    }));
+  },
+  parse: function (data) {
+    return data.response.artists;
+  }
+});
+_.extend(EchoNest.SearchArtistModel.prototype, DeferredFetching.prototype);
+
 EchoNest.SearchSongModel = Backbone.Collection.extend({
   model: EchoNest.SongModel,
   initialize: function (attrs, options) {
@@ -87,19 +119,19 @@ EchoNest.SearchSongModel = Backbone.Collection.extend({
   url: function () {
     return endpoint + '/song/search/' + queryStringFromParams(_.defaults(this.songParams || {}, {
       api_key: apiKey,
-                // required for cross-domain requests
-                format: 'jsonp'
-              }));
+      // required for cross-domain requests
+      format: 'jsonp'
+    }));
   },
   fetch: function (options) {
     if (options && options.songParams) {
       this.songParams = options.songParams;
     }
     return Backbone.Collection.prototype.fetch.call(this, _.defaults(options || {}, {
-                // required for cross-domain requests
-                dataType: 'jsonp',
-                callback: 'callback'
-              }));
+      // required for cross-domain requests
+      dataType: 'jsonp',
+      callback: 'callback'
+    }));
   },
   parse: function (data) {
     return data.response.songs;

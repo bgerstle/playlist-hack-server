@@ -65,7 +65,7 @@
       $sidebarLoadingIndicator.fadeIn(fadeInDuration);
           // after fading in...
           _.delay(function () {
-            playlistButtonModel.set("tracks", getSelectedTracks());
+            playlistButtonModel.set("tracks", selectedTracks);
             // wait a bit after setting tracks, then fade out
             _.delay(function () {
               $sidebarLoadingIndicator.fadeOut(500);
@@ -130,16 +130,16 @@
       }, options);
     };
 
+    var maybePadZero = function (time) {
+      if (time.length < 2) {
+        time = '0' + time;
+      }
+    };
     var quickSecondsToTime = function (seconds) {
-      var minutes = String(Math.floor(seconds / 60));
-      if (minutes.length < 2) {
-        minutes = '0' + minutes;
-      }
-      var seconds = String(Math.floor(seconds % 60));
-      if (seconds.length < 2) {
-        seconds = '0' + seconds;
-      }
-      return [minutes, ':', seconds].join('');
+      var fmtMinutes = maybePadZero(String(Math.floor(seconds / 60)));
+      var fmtSeconds = maybePadZero(String(Math.floor(seconds % 60)));
+
+      return [fmtMinutes, ':', fmtSeconds].join('');
     };
 
     var percentify = function (normalized) {

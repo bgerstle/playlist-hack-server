@@ -158,7 +158,6 @@ var baseSearchDefaults = {
   song_selection: 'energy-top',
   song_type: 'studio',
   results: 50,
-  variety: 0.3,
   target_song_hotttnesss: 0.3,
   target_artist_hotttnesss: 0.3
 };
@@ -169,10 +168,12 @@ Stage.PredefinedModelAttributes = {
     subtitle: 'Loosen up with a light, upbeat song.',
     searchDefaults: _.defaults({
       min_energy: 0.2,
-      max_energy: 0.6,
+      target_energy: 0.6,
       min_tempo: 50,
-      max_tempo: 120,
-      min_danceability: 0.6
+      target_tempo: 110,
+      max_tempo: 140,
+      min_danceability: 0.2,
+      target_danceability: 0.6
     }, baseSearchDefaults),
     className: 'warmup'
   },
@@ -192,8 +193,8 @@ Stage.PredefinedModelAttributes = {
     searchDefaults: _.defaults({
       min_energy: 0.1,
       min_tempo: 40,
-      max_tempo: 70,
-      min_danceability: 0.3
+      max_tempo: 100,
+      min_danceability: 0.2
     }, baseSearchDefaults),
     className: 'climb'
   },

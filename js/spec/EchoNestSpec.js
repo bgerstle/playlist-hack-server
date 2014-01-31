@@ -25,7 +25,22 @@ describe("Test fetching songs from EchoNest", function() {
       }
     }).always(function(collection, json, options) {
       expect(json.response.status.code).toBe(0);
-      expect(collection.findWhere({title: "Billie Jean", artist_name: "Michael Jackson"})).toBeTruthy();
+      var songModel = collection.findWhere({title: "Billie Jean", artist_name: "Michael Jackson"});
+      expect(songModel.get("id")).toBeTruthy();
+      done();
+    });
+  });
+
+  it("should fetch artists matching \"Jamiroquai\" using artist name", function(done) {
+    var search = new EchoNest.SearchArtistModel();
+    search.deferredFetch({
+      artistParams: {
+        name: "Jamiroquai"
+      }
+    }).always(function(collection, json, options) {
+      expect(json.response.status.code).toBe(0);
+      var artistModel = collection.findWhere({name: "Jamiroquai"});
+      expect(artistModel.get("id")).toBeTruthy();
       done();
     });
   });
