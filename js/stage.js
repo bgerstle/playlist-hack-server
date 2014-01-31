@@ -38,8 +38,8 @@ Stage.Model = Backbone.Model.extend({
 Stage.View = Backbone.View.extend({
   className: "stage",
   initialize: function (options) {
-	  // technically this should be done in render...
-	this.$el.addClass(this.model.get("className"));
+    // technically this should be done in render...
+    this.$el.addClass(this.model.get("className"));
 
     this.model.on('change', this.render, this);
     this.render();
@@ -172,7 +172,7 @@ Stage.PredefinedModelAttributes = {
       min_tempo: 50,
       target_tempo: 110,
       max_tempo: 140,
-      min_danceability: 0.2,
+      min_danceability: 0.4,
       target_danceability: 0.6
     }, baseSearchDefaults),
     className: 'warmup'
@@ -202,10 +202,10 @@ Stage.PredefinedModelAttributes = {
     title: 'Cool Down',
     subtitle: 'Time to recover.',
     searchDefaults: _.defaults({
-      min_energy: 0.3,
-      min_tempo: 60,
-      max_tempo: 110,
-      min_danceability: 0.4
+      max_energy: 0.5,
+      min_tempo: 40,
+      max_tempo: 80,
+      target_danceability: 0.4
     }, baseSearchDefaults),
     className: 'cool-down'
   }
