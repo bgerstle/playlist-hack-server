@@ -390,14 +390,16 @@ p.artist {
 /* Auto Complete */
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
-  position: relative;
-  /*left: 40px!important;*/
+  position: absolute;
+  top: 141px!important;
+  left:0px!important;
   width: 302px!important;
   background: rgba(0,0,0,0.9);
   border-radius: 0px 0px 10px 10px;
   float: left;
   max-height: 45vh;
   overflow: scroll;
+  z-index: 10;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:first-of-type {
@@ -408,6 +410,7 @@ p.artist {
   padding: 10px 16px;
   border-bottom: 1px solid #222;
   overflow: hidden;
+  color: #84bd00;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
