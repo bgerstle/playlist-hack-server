@@ -430,19 +430,39 @@ p.artist {
 
 .searchFieldContainer {
   padding-top: 10px;
+  max-height: 49px;
+  -webkit-transition: 250ms ease;
 }
 
 .searchField {
+  height: 0px;
+  margin: 0px;
+  padding: 0px 10px;
+  overflow: hidden;
+  -webkit-transition: 250ms ease;
+  width: 252px;
+  background: rgba(255,255,255,0.19);
+	border: 0px;
+}
+
+.stage-module-container .searchField:first-of-type,
+.stage-module-container:hover .searchField {
   border-width: 0px 0px 1px 0px;
   padding: 10px;
   margin: 0px 0px 10px;
   border-color: #444;
   background: rgba(255,255,255,0.19);
   width: 252px;
+  -webkit-transition: 250ms ease;
   color: #999;
+  height: 18px;
   outline: none;
   font-family: 'proxima_nova_rgregular';
   font-size: 15px;
+}
+
+.stage-module-container:hover .searchFieldContainer {
+	max-height: 490px;
 }
 
 button {
