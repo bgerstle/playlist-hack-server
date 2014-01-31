@@ -19,7 +19,7 @@
     });
     stagePicker.render();
 
-    // initial app w/ default stage
+    // initialize app w/ default stage
     var defaultStage = Stage.PredefinedModelFactory('warmup');
     defaultStage.set("index", 0);
     stages.add(defaultStage);
@@ -37,34 +37,203 @@
     playlistButtonView.render();
     $('#rightSidebar').append(playlistButtonView.el);
 
-    stages
-    .on('playlist:sort playlist:change:selected',
-        function () {
-          var $sidebarLoadingIndicator = $('#rightSidebar > .loadingIndicator');
-          var fadeInDuration = 450;
-          $sidebarLoadingIndicator.fadeIn(fadeInDuration);
+    ///
+    /// Setup Right Panel (TODO: put in a separate view class?)
+    ///
+
+    ///
+    /// Playlist "Button"
+    ///
+
+    var getSelectedTracks = function () {
+      var newTracks = [];
+      if (stages.length) {
+        newTracks = _.map(stages.getSelectedSongs(), function (song) {
+          return song.getSpotifyTrackID();
+        });
+      }
+      return newTracks;
+    };
+
+    var updatePlaylistButtonTracks = function () {
+      var $sidebarLoadingIndicator = $('#rightSidebar > .loadingIndicator');
+      var fadeInDuration = 450;
+      $sidebarLoadingIndicator.fadeIn(fadeInDuration);
           // after fading in...
           _.delay(function () {
-            var newTracks = [];
-            if (stages.length) {
-              newTracks = _.chain(stages.models)
-              .map(function (stage) {
-              // get selected songs, grouped by stage
-              return stage.getSelectedSongs();
-            })
-              .flatten()
-              .map(function (song) {
-                return song.getSpotifyTrackID();
-              })
-              .value();
-            }
-            playlistButtonModel.set("tracks", newTracks);
-
+            playlistButtonModel.set("tracks", getSelectedTracks());
             // wait a bit after setting tracks, then fade out
             _.delay(function () {
               $sidebarLoadingIndicator.fadeOut(500);
             }, 450);
           }, fadeInDuration);
+    };
+
+    stages.on('playlist:sort playlist:change:selected',
+              updatePlaylistButtonTracks);
+
+    ///
+    /// Workout Stats
+    ///
+
+    var WorkoutStatsModel = Backbone.Model.extend({});
+    var WorkoutStatsView = Backbone.View.extend({
+      initialize: function (options) {
+        this.model.on('change', this.render, this);
+      },
+      template: function () {
+        if (_.keys(this.model.attributes).length === 0) {
+          return '';
+        }
+        return _.template($('#workout-stats-template').html(), {
+          sections: this.model.toJSON()
         });
+      },
+      render: function () {
+        this.$el.html(this.template());
+      }
+    });
+
+    var statsModel = new WorkoutStatsModel();
+    var statsView = new WorkoutStatsView({
+      el: $('#workoutStats'),
+      model: statsModel
+    });
+
+    /*
+     !!!: need to use a factory to make sure we get a new object, using
+     _.clone() only makes a shallow copy
+     */
+    // TODO: DRY this up and make a class
+    var StatTemplate = function (options) {
+      _.extend(this, {
+        duration: {
+          title: "Duration",
+          value: 0
+        },
+        averageEnergy: {
+          title: "Average Energy",
+          value: 0
+        },
+        averageDanceability: {
+          title: "Average Danceability",
+          value: 0
+        },
+        averageTempo: {
+          title: "Average Tempo",
+          value: 0
+        }
+      }, options);
+    };
+
+    var quickSecondsToTime = function (seconds) {
+      var minutes = String(Math.floor(seconds / 60));
+      if (minutes.length < 2) {
+        minutes = '0' + minutes;
+      }
+      var seconds = String(Math.floor(seconds % 60));
+      if (seconds.length < 2) {
+        seconds = '0' + seconds;
+      }
+      return [minutes, ':', seconds].join('');
+    };
+
+    var percentify = function (normalized) {
+      return String(Math.floor(normalized * 100));
+    };
+
+    var StatFormatters = {
+      duration: quickSecondsToTime,
+      averageEnergy: percentify,
+      averageDanceability: percentify,
+      averageTempo: function (tempo) { return Math.floor(tempo); }
+    };
+
+    var updateWorkoutStats = function () {
+      statsModel.clear();
+
+      var overallStats = new StatTemplate(),
+          stageSelectedSongs = [];
+
+      stages.each(function (stage) {
+        var stageStats = new StatTemplate();
+        stageSelectedSongs = _.pluck(stage.getSelectedSongs(), "attributes");
+        if (stageSelectedSongs.length === 0) {
+          return;
+        }
+
+        // reset (instead of recloning)
+        _.each(stageSelectedSongs, function (selectedSong) {
+          stageStats.duration.value = 0;
+          stageStats.averageEnergy.value = 0;
+          stageStats.averageTempo.value = 0;
+          stageStats.averageDanceability.value = 0;
+        });
+
+        // sum
+        _.each(stageSelectedSongs, function (selectedSong) {
+          stageStats.duration.value += selectedSong.audio_summary.duration;
+          stageStats.averageEnergy.value += selectedSong.audio_summary.energy;
+          stageStats.averageTempo.value += selectedSong.audio_summary.tempo;
+          stageStats.averageDanceability.value += selectedSong.audio_summary.danceability;
+        });
+
+        // get key for the stat object (i.e. "Warm Up" or "Warm Up 1")
+        var stageStatsHeader = stage.get("title"),
+        keyIterations = 1;
+        while (statsModel.has(stageStatsHeader)) {
+          stageStatsHeader = [stage.get("title"), String(keyIterations)].join(' ');
+          keyIterations++;
+        }
+
+        // average
+        _.each(stageStats, function (stat, key, stats) {
+          if (key !== 'duration') {
+            stat.value /= stageSelectedSongs.length;
+          }
+        });
+
+        // set stats object in statsModel
+        statsModel.set(stageStatsHeader.replace(/ /, "_"), {
+          title: stageStatsHeader,
+          data: stageStats
+        }, {silent: true});
+
+        // sum overall stats
+        overallStats.duration.value += stageStats.duration.value;
+        overallStats.averageEnergy.value += stageStats.averageEnergy.value;
+        overallStats.averageTempo.value += stageStats.averageTempo.value;
+        overallStats.averageDanceability.value += stageStats.averageDanceability.value;
+      });
+
+      if (!statsModel.hasChanged()) {
+        return;
+      }
+
+      // average overall stats
+      _.each(overallStats, function (stat, key, stats) {
+          if (key !== 'duration') {
+            stat.value /= stages.length;
+          }
+      });
+
+      // set overall stats
+      statsModel.set("overall", {
+        title: "Overall",
+        data: overallStats
+      }, {silent: true});
+
+      // format all stats, then fire change event
+      _.each(statsModel.attributes, function (stat, key) {
+        _.each(stat.data, function (statData, dataKey) {
+          statData.value = StatFormatters[dataKey](statData.value);
+        });
+      });
+
+      statsModel.trigger('change');
+    };
+
+    stages.on('playlist:sort playlist:change:selected',
+              updateWorkoutStats);
   });
 })(this);

@@ -102,5 +102,18 @@
       <option value=<%= option %>><%= data.title %></option>
       <% }); %>
   </script>
+  <script type="text/template" id="workout-stats-template">
+    <% _.each(sections, function (section, sectionKey) { %>
+      <div class=<%= sectionKey %>>
+        <h2><%= section.title %></h2>
+        <% _.each(section.data, function (stat, field) { %>
+          <p class=<%= field %>>
+            <strong><%= stat.title %>:</strong>
+            <span><%= stat.value %></span>
+          </p>
+          <% }); %>
+        <% }); %>
+      </div>
+  </script>
 </body>
 </html>

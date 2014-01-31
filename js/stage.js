@@ -93,6 +93,15 @@ Stage.Collection = Backbone.Collection.extend({
       model.set("index", lastIndex);
     });
     this.add(models);
+  },
+  getSelectedSongs: function () {
+    return _.chain(this.models)
+    .map(function (stage) {
+      // get selected songs, grouped by stage
+      return stage.getSelectedSongs();
+    })
+    .flatten()
+    .value();
   }
 });
 
@@ -172,7 +181,7 @@ Stage.PredefinedModelAttributes = {
       min_tempo: 110,
       min_danceability: 0.7
     }, baseSearchDefaults),
-    className: 'warmup'
+    className: 'sprint'
   },
   climb: {
     title: 'Climb',
@@ -183,7 +192,7 @@ Stage.PredefinedModelAttributes = {
       max_tempo: 70,
       min_danceability: 0.3
     }, baseSearchDefaults),
-    className: 'warmup'
+    className: 'climb'
   },
   cool_down: {
     title: 'Cool Down',
@@ -194,7 +203,7 @@ Stage.PredefinedModelAttributes = {
       max_tempo: 110,
       min_danceability: 0.4
     }, baseSearchDefaults),
-    className: 'warmup'
+    className: 'cool-down'
   }
 };
 
