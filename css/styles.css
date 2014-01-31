@@ -134,6 +134,7 @@ a {
   margin-bottom: 10px;
   color: #000;
   margin-right: 20px;
+  text-shadow: 1px 1px 1px #aaa;
 }
 
 .stage h2 {
@@ -148,6 +149,7 @@ a {
   font-size: 25px;
   line-height: 60px;
   min-width: 530px;
+  border-bottom: 4px solid #aaa;
 }
 
 #stage-container-outer {
@@ -214,6 +216,7 @@ a {
   border-bottom: 1px solid #84bd00;
   padding: 15px;
   overflow: hidden;
+  width: 271px;
 }
 
 .search-form p {
@@ -451,6 +454,7 @@ p.artist {
 	outline: none;
   font-family: 'proxima_nova_rgregular';
   font-size: 15px;
+  text-shadow: 1px 1px 1px #000;
 }
 
 .stage-module-container {
@@ -546,7 +550,7 @@ button:hover {
 	position: absolute;
 	right: 0px;
 	width: 200px;
-	margin-top: 230px;
+	margin-top: 200px;
 }
 
 .addStageConainer select {
@@ -566,12 +570,16 @@ button:hover {
 	background-size: 85%;
 }
 
+.addStageContainer p {
+	color: rgba(0,0,0,0.6);
+}
+
 /* Sidebar & Playlist */
 
 #rightSidebar {
 	position: absolute;
 	right: 0px;
-	top: 0px;
+	top: 64px;
 	bottom: 0px;
 	width: 300px;
 	background: rgb(42,42,41);

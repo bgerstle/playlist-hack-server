@@ -82,6 +82,7 @@ Search.SearchTypeView = Backbone.View.extend({
       throw "Must specify search types!";
     }
     this.searchTypes = opts.types;
+
   },
   events: {
     'change select': 'typeSelected',
@@ -90,14 +91,16 @@ Search.SearchTypeView = Backbone.View.extend({
   },
   typeSelected: function(event) {
     var selectedVal = $(event.target).val();
-    if (this.searchTypes[selectedVal].text.length < 8) {
+		this.updateArrowClass(this.searchTypes[selectedVal].text);
+    this.trigger('change', selectedVal);
+    $(event.target).removeClass('hover');
+  },
+  updateArrowClass: function (type) {
+    if (type.length < 8) {
       this.$('select').addClass('moveArrowDown');
     } else {
       this.$('select').removeClass('moveArrowDown');
     }
-    this.trigger('change', selectedVal);
-
-    $(event.target).removeClass('hover');
   },
   didMouseOver: function (event) {
     $(event.target).addClass('hover');
@@ -112,6 +115,7 @@ Search.SearchTypeView = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template());
+    this.updateArrowClass($('select').val());
   },
   serialize: function() {
     var $selected = this.$(":selected");
