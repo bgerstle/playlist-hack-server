@@ -330,6 +330,11 @@ Search.SearchResultView = Backbone.View.extend({
     this.$playButtonContainer = $('<div class="iframe-container"></div>');
     this.playButton.$el.appendTo(this.$playButtonContainer);
   },
+  events: function () {
+    return {
+      'click': 'click'
+    };
+  },
   template: function() {
     return _.template($("#search-result-template").html(), this.model.toJSON());
   },
@@ -338,6 +343,17 @@ Search.SearchResultView = Backbone.View.extend({
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
     this.$('.more-song-info').click(this.showSongSummary);
+  },
+  click: function (event) {
+    event.preventDefault();
+    if (this.$el.attr("selected")) {
+      this.$el.removeAttr("selected");
+      this.trigger('song:unselect', this);
+    } else {
+      this.$el.attr("selected", true);
+      this.trigger('song:select', this);
+    }
+    return false;
   },
   showSongSummary: function (e) {
     if (!this.$('.song-summary-container').hasClass('selected')) {
