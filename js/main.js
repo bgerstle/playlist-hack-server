@@ -134,6 +134,7 @@
       if (time.length < 2) {
         time = '0' + time;
       }
+      return time;
     };
     var quickSecondsToTime = function (seconds) {
       var fmtMinutes = maybePadZero(String(Math.floor(seconds / 60)));
