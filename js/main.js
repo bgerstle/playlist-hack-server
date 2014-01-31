@@ -40,20 +40,31 @@
     stages
     .on('playlist:sort playlist:change:selected',
         function () {
-          var newTracks = [];
-          if (stages.length) {
-            newTracks = _.chain(stages.models)
-            .map(function (stage) {
+          var $sidebarLoadingIndicator = $('#rightSidebar > .loadingIndicator');
+          var fadeInDuration = 450;
+          $sidebarLoadingIndicator.fadeIn(fadeInDuration);
+          // after fading in...
+          _.delay(function () {
+            var newTracks = [];
+            if (stages.length) {
+              newTracks = _.chain(stages.models)
+              .map(function (stage) {
               // get selected songs, grouped by stage
               return stage.getSelectedSongs();
             })
-            .flatten()
-            .map(function (song) {
-              return song.getSpotifyTrackID();
-            })
-            .value();
-          }
-          playlistButtonModel.set("tracks", newTracks);
+              .flatten()
+              .map(function (song) {
+                return song.getSpotifyTrackID();
+              })
+              .value();
+            }
+            playlistButtonModel.set("tracks", newTracks);
+
+            // wait a bit after setting tracks, then fade out
+            _.delay(function () {
+              $sidebarLoadingIndicator.fadeOut(500);
+            }, 450);
+          }, fadeInDuration);
         });
   });
 })(this);

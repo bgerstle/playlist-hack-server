@@ -327,11 +327,18 @@ Search.SearchResultView = Backbone.View.extend({
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
     this.updateSelectedState(this.model, this.model.get("selected"));
+    this.renderPlayButton();
   },
   click: function (event) {
     event.preventDefault();
     this.model.set("selected", !this.model.get("selected"));
     return false;
+  },
+  hide: function () {
+    this.$el.hide();
+  },
+  show: function () {
+    this.$el.show();
   },
   updateSelectedState: function (model, selected, options) {
     if (selected) {
@@ -399,10 +406,12 @@ Search.SearchResultListView = Backbone.View.extend({
       var subview = new Search.SearchResultView({
         model: song
       });
-      subview.render();
-      subview.$el.appendTo($results);
+      subview.hide();
       return subview;
     }, this));
+
+    $results.append(_.pluck(this.resultSubviews, '$el'));
+    _.invoke(this.resultSubviews, "show");
 
     // act on visible subviews
     this.checkVisibleSubviews();
@@ -446,11 +455,18 @@ Search.SearchResultListView = Backbone.View.extend({
     }
     var visibleSubviews = this.resultSubviews.slice(firstVisibleSubview,
                                                     lastVisibleSubview + 1);
-    console.log(["rendering play buttons for subviews",
-                _.first(visibleSubviews).model.get("title"),
-                "to",
-                _.last(visibleSubviews).model.get("title")].join(' '));
-    _.invoke(visibleSubviews, "renderPlayButton");
+    // console.log(["rendering play buttons for subviews",
+    //             _.first(visibleSubviews).model.get("title"),
+    //             "to",
+    //             _.last(visibleSubviews).model.get("title")].join(' '));
+    var self = this;
+    _.each(visibleSubviews, function (subview) {
+      _.defer(function () {
+        if (subview.isVisible(self.$el)) {
+          subview.render();
+        }
+      });
+    });
   }
 });
 })(this);

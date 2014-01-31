@@ -2,14 +2,40 @@
 <html>
 <head>
   <title>Workout Playlist Generator</title>
+  <!-- Styles -->
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+  <div id="heading">| Workout Playlist Generator</div>
+  <div id="stage-container-outer">
+    <div id="stage-container">
+	    <div class="stage-picker">
+        <div class="addStageConainer">
+          <h1>Add Stage</h1>
+          <select></select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rightSidebar">
+	  <div class="loadingIndicator" style="display: none;">
+      <div class="eq-spinner"><i></i></div>
+    </div>
+  </div>
+
   <!-- Includes -->
   <script type="text/javascript" src="js/lib/underscore_dev.js"></script>
   <script type="text/javascript" src="js/lib/jquery_dev.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
   <script type="text/javascript" src="js/lib/backbone_dev.js"></script>
 
-  <!-- Styles -->
-  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <!-- Code *ORDER IS IMPORTANT* -->
+  <!-- Use a proper module/require system -->
+  <script type="text/javascript" src="js/play_button.js"></script>
+  <script type="text/javascript" src="js/playlist.js"></script>
+  <script type="text/javascript" src="js/search.js"></script>
+  <script type="text/javascript" src="js/stage.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
 
   <!-- Templates -->
   <!-- TODO: load asynchronously from a separate file -->
@@ -18,23 +44,23 @@
      <ul class="results">
      </ul>
    </div>
-  </script>
-  <script type="text/template" id="search-result-template">
-    <p class="song-result" href="" data-id=<%= id %>><%= title %></p>
-    <p class="artist"> <%= artist_name %></p>
-    <a class="more-song-info">+</a>
-    <div class="song-summary-container">
-      <div class="song-summary-tempo">
-        <span>Tempo: </span> <%= audio_summary.tempo %>
-      </div>
-      <div class="song-summary-energy">
-        <span>Energy: </span> <%= audio_summary.energy %>
-      </div>
-      <div class="song-summary-danceability">
-        <span>Danceability:</span> <%= audio_summary.danceability %>
-      </div>
-      <div class="song-summary-hotttnesss">
-        <span>Hotttnesss:</span> <%= song_hotttnesss %></div>
+ </script>
+ <script type="text/template" id="search-result-template">
+  <p class="song-result" href="" data-id=<%= id %>><%= title %></p>
+  <p class="artist"> <%= artist_name %></p>
+  <a class="more-song-info">+</a>
+  <div class="song-summary-container">
+    <div class="song-summary-tempo">
+      <span>Tempo: </span> <%= audio_summary.tempo %>
+    </div>
+    <div class="song-summary-energy">
+      <span>Energy: </span> <%= audio_summary.energy %>
+    </div>
+    <div class="song-summary-danceability">
+      <span>Danceability:</span> <%= audio_summary.danceability %>
+    </div>
+    <div class="song-summary-hotttnesss">
+      <span>Hotttnesss:</span> <%= song_hotttnesss %></div>
     </div>
   </script>
   <script type="text/template" id="stage-template">
@@ -66,38 +92,13 @@
     <select single>
       <% _.each(options, function (data, option) { %>
         <option name=<%= data.seed %> value=<%= option %>><%= data.text %></option>
-      <% }); %>
+        <% }); %>
     </select>
   </script>
   <script type="text/template" id="stage-picker-template">
     <% _.each(options, function (data, option) { %>
       <option value=<%= option %>><%= data.title %></option>
-    <% }); %>
+      <% }); %>
   </script>
-</head>
-<body>
-  <div id="heading">| Workout Playlist Generator</div>
-  <div id="stage-container-outer">
-    <div id="stage-container">
-	    <div class="stage-picker">
-        <div class="addStageConainer">
-          <h1>Add Stage</h1>
-          <select></select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="rightSidebar">
-	  <div class="loadingIndicator" style="display: none;">
-      <div class="eq-spinner"><i></i></div>
-    </div>
-  </div>
-  <!-- Code *ORDER IS IMPORTANT* -->
-  <!-- Use a proper module/require system -->
-  <script type="text/javascript" src="js/play_button.js"></script>
-  <script type="text/javascript" src="js/playlist.js"></script>
-  <script type="text/javascript" src="js/search.js"></script>
-  <script type="text/javascript" src="js/stage.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
