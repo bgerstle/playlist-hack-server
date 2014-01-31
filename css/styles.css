@@ -548,6 +548,7 @@ button:hover {
 #rightSidebar .loadingIndicator {
 	height: 100%;
 	border-radius: 0px;
+	z-index: 100;
 }
 
 #rightSidebar .loadingIndicator .eq-spinner {
