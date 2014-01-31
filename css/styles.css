@@ -268,6 +268,7 @@ a {
   overflow: hidden;
   cursor: pointer;
   min-height: 100px;
+  color: #000;
 }
 
 .search-result[selected] {
@@ -429,7 +430,7 @@ p.artist {
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all .ui-corner-all.ui-state-focus {
-  color: red!important;
+  color: #fff!important;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover a {
@@ -532,9 +533,10 @@ button:hover {
 .addStageConainer {
 	background: #ddd;
 	border-radius: 10px;
-	border: 1px solid #999;
+	border: 1px solid #aaa;
 	padding: 30px 15px 20px;
 	color: #000;
+	width: 130px;
 	text-align: center;
 }
 
@@ -582,9 +584,8 @@ button:hover {
 	top: 64px;
 	bottom: 0px;
 	width: 300px;
-	background: rgb(42,42,41);
-	border-left: 1px solid #999;
-	box-shadow: -1px 1px 21px #000;
+	background: #000;
+	box-shadow: -1px 1px 41px #000;
 	z-index: 10;
 }
 
@@ -601,4 +602,78 @@ button:hover {
 #rightSidebar iframe {
 	width: 300px;
 	height: 380px;
+}
+
+#rightSidebar h2 {
+	padding: 15px 15px 10px;
+	font-size: 19px;
+	text-align: center;
+	color: #fff;
+	border-bottom: 1px solid rgba(255,255,255,0.2);
+	margin: 0px 15px 15px;
+}
+
+#rightSidebar p {
+	text-align: left;
+	color: #999;
+	padding: 0px 15px 20px;
+	font-size: 14px;
+}
+
+#workoutStats {
+	position: absolute;
+bottom: 15px;
+left: 10px;
+right: 10px;
+top: 390px
+}
+
+#rightSidebar #workoutStats h2 {
+	padding: 0px;
+	text-align: left;
+	font-size: 19px;
+	color: #fff;
+	border-bottom: 1px solid rgba(255,255,255,0.2);
+	margin: 10px 0px 0px;
+	color: #fff;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+}
+
+
+#rightSidebar #workoutStats .overall h2 {
+	color: #84bd00;
+	margin-top: 15px;
+}
+
+#rightSidebar #workoutStats p {
+	text-align: left;
+	color: #999;
+	padding: 0px;
+	font-size: 14px;
+}
+
+.Warm_Up p span {
+	float: right;
+}
+
+#workoutStats p.duration {
+	position: relative;
+}
+
+#workoutStats p.duration strong {
+	display: none;
+}
+
+#workoutStats p.duration span {
+	position: absolute;
+	display: block;
+	bottom: 25px;
+	right: 0px;
+	top: -23px;
+	color: #fff;
+}
+
+#rightSidebar #workoutStats .overall p.duration span {
+	color: #84bd00;
 }
