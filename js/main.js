@@ -56,6 +56,10 @@
     };
 
     var updatePlaylistButtonTracks = function () {
+      var selectedTracks = getSelectedTracks();
+      if (getSelectedTracks.length === 0 && playlistButtonModel.get("tracks").length === 0) {
+        return;
+      }
       var $sidebarLoadingIndicator = $('#rightSidebar > .loadingIndicator');
       var fadeInDuration = 450;
       $sidebarLoadingIndicator.fadeIn(fadeInDuration);
