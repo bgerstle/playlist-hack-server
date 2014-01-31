@@ -23,15 +23,24 @@
     defaultStage.set("index", 0);
     stages.add(defaultStage);
 
-    Stage.getGlobalSelectionsModel().on({
-      add: function (song, collection, options) {
-        console.log('song added to global selections model!');
-        console.log(song);
-      },
-      remove: function (song, collection, options) {
-        console.log('song removed from global selections model!');
-        console.log(song);
-      }
+    var playlistButtonModel = new PlayButtonModel({
+      theme: PlayButtonModel.SupportedParameters.theme.black,
+      view: PlayButtonModel.SupportedParameters.view.list,
+      tracksetDetection: false
     });
+    var playlistButtonView = new PlayButtonView({
+      model: playlistButtonModel
+    });
+    playlistButtonView
+    $('#rightSidebar').append(playlistButtonView.el);
+
+    Stage
+    .getGlobalSelectionsModel()
+    .on('add remove',
+        function (song, collection, options) {
+          playlistButtonModel.set("tracks", collection.map(function (model) {
+            return model.getSpotifyTrackID();
+          }));
+        });
   });
 })(this);

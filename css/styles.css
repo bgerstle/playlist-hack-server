@@ -533,6 +533,8 @@ button:hover {
 	background-size: 85%;
 }
 
+/* Sidebar & Playlist */
+
 #rightSidebar {
 	position: absolute;
 	right: 0px;
@@ -553,4 +555,9 @@ button:hover {
 
 #rightSidebar .loadingIndicator .eq-spinner {
 	height: 100px;
+}
+
+#rightSidebar iframe {
+  height: 100%;
+  width: 100%;
 }

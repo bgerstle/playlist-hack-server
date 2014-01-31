@@ -9,10 +9,11 @@ this.PlayButtonModel = Backbone.Model.extend({
   defaults: {
     title: "Playlist",
     theme: supportedParametersHash.theme.white,
-    view: supportedParametersHash.view.list
+    view: supportedParametersHash.view.list,
+    tracksetDetection: true
   },
 
-  supportedParameters: supportedParametersHash,
+  SupportedParameters: supportedParametersHash,
 
   initialize: function (options) {
     if (options) {
@@ -38,7 +39,7 @@ this.PlayButtonModel = Backbone.Model.extend({
       return null;
     }
 
-    return _.reduce(this.supportedParameters, function(error, validValues, param) {
+    return _.reduce(this.SupportedParameters, function(error, validValues, param) {
         // bail if there's already been a validation error
         if (error) return;
 
@@ -59,6 +60,8 @@ this.PlayButtonModel = Backbone.Model.extend({
   encodedTitle: function() {
     return encodeURIComponent(this.get("title"));
   }
+}, {
+  SupportedParameters: supportedParametersHash
 });
 
 this.PlayButtonView= Backbone.View.extend({
@@ -88,7 +91,12 @@ this.PlayButtonView= Backbone.View.extend({
 
     var src = [];
     if (this.model.has("tracks")) {
-      var type = this.model.get("tracks").length > 1 ? 'trackset' : 'track';
+      var type = 'track';
+      if (this.model.get("tracksetDetection")) {
+        type = this.model.get("tracks").length > 1 ? 'trackset' : 'track';
+      } else if (this.model.get('view') === this.model.SupportedParameters.view.list) {
+        type =  'trackset';
+      }
       src.push("https://embed.spotify.com/?uri=spotify:", type, ':');
       if (type === 'trackset') {
         src.push(this.model.encodedTitle(), ":", this.model.commaSeparatedTracks());
