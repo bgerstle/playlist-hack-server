@@ -103,6 +103,8 @@ this.PlayButtonView= Backbone.View.extend({
       } else {
         src.push(this.model.get("tracks").pop());
       }
+
+      src.push('&theme=', this.model.get("theme"), '&view=', this.model.get("view"));
     }
 
     this.$el.attr("src", src.join(''));
