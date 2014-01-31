@@ -157,6 +157,7 @@ a {
 
 #stage-container {
 	height: 642px;
+	position: relative;
 }
 
 .stage {
@@ -486,4 +487,33 @@ button[disabled] {
 button:hover {
   background: rgba(255,255,255,0.2);
   cursor: pointer;
+}
+
+.addStageConainer {
+	background: #ccc;
+	border-radius: 10px;
+	border: 1px solid #999;
+	padding: 70px 15px;
+	color: #000;
+	text-align: center;
+}
+
+.stage-picker h1 {
+  font-size: 24px;
+  margin: 0px 10px 20px;
+  color: #000;
+  text-align: center;
+}
+
+
+.stage-picker  {
+  width: 170px;
+	position: absolute;
+	right: 0px;
+	width: 200px;
+	margin-top: 185px;
+}
+
+.stage-picker .select {
+
 }
