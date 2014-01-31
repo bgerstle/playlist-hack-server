@@ -556,8 +556,3 @@ button:hover {
 #rightSidebar .loadingIndicator .eq-spinner {
 	height: 100px;
 }
-
-#rightSidebar iframe {
-  height: 100%;
-  width: 300px;
-}
