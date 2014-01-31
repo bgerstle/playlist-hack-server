@@ -250,6 +250,7 @@ a {
   float: left;
   position: relative;
   width: 300px;
+  padding-top: 161px;
   height: 400px;
   overflow: scroll;
 }
@@ -446,6 +447,11 @@ p.artist {
 	outline: none;
   font-family: 'proxima_nova_rgregular';
   font-size: 15px;
+}
+
+.stage-module-container {
+	position: absolute;
+	z-index: 15;
 }
 
 .stage-module-container .searchField:first-of-type,
