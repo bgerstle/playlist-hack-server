@@ -50,11 +50,6 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
     this.model.comparator = function(a, b) {
       return b.get("song_hotttnesss") - a.get("song_hotttnesss");
     };
-    this.$el.autocomplete({
-      delay: 500,
-      source: this.autoCompleteSourceCallback,
-      select: this.autoCompleteSelected
-    });
   },
   autoCompleteSourceCallback: function(request, callback) {
     this.model.deferredFetch({
@@ -82,6 +77,17 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
   },
   serialize: function() {
     return this.$el.attr("data-id");
+  },
+  render: function () {
+    this.$el.autocomplete({
+      appendTo: this.$el.parent(),
+      delay: 500,
+      source: this.autoCompleteSourceCallback,
+      select: this.autoCompleteSelected
+    });
+  },
+  remove: function () {
+    this.$el.autocomplete.destroy();
   }
 });
 
@@ -203,11 +209,17 @@ Search.BaseSearchFormView = Backbone.View.extend({
         return;
       }
       this.$fieldContainer.append(subview.$el);
+      // render after being added to the DOM, otherwise autocomplete
+      // isn't appended correctly
+      subview.render();
     }, this));
 
-    this.$addFieldButton.prop("disabled", this.fieldViews.length === this.maxFields);
-    this.$removeFieldButton.prop("disabled", this.fieldViews.length <= 1);
-    this.$searchButton.prop("disabled", this.fieldViews.length === 0);
+    this.$addFieldButton.prop("disabled",
+                              this.fieldViews.length === this.maxFields);
+    this.$removeFieldButton.prop("disabled",
+                                 this.fieldViews.length <= 1);
+    this.$searchButton.prop("disabled",
+                            this.fieldViews.length === 0);
   },
   searchTypeChanged: function(event) {
     this.reset();
@@ -365,7 +377,8 @@ Search.SearchResultListView = Backbone.View.extend({
     clearInterval(this.scrollPoll);
   },
   template: function() {
-    return _.template($('#searchResultList-template').html(), {songs: this.model.toJSON()});
+    return _.template($('#searchResultList-template').html(),
+                      {songs: this.model.toJSON()});
   },
   render: function() {
     // remove subviews manually in case they need to do any cleanup
@@ -427,8 +440,12 @@ Search.SearchResultListView = Backbone.View.extend({
     if (firstVisibleSubview < 0) {
       return;
     }
-    var visibleSubviews = this.resultSubviews.slice(firstVisibleSubview, lastVisibleSubview + 1);
-    console.log("rendering play buttons for subviews " + _.first(visibleSubviews).model.get("title") + " to " + _.last(visibleSubviews).model.get("title"));
+    var visibleSubviews = this.resultSubviews.slice(firstVisibleSubview,
+                                                    lastVisibleSubview + 1);
+    console.log(["rendering play buttons for subviews",
+                _.first(visibleSubviews).model.get("title"),
+                "to",
+                _.last(visibleSubviews).model.get("title")].join(' '));
     _.invoke(visibleSubviews, "renderPlayButton");
   }
 });

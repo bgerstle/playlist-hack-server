@@ -1,11 +1,5 @@
 (function () {
   $().ready(function() {
-    var defaultStage = new Stage.Model({
-      index: 0,
-      title: 'Warm Up',
-      subtitle: 'Ease into your workout.'
-    });
-
     var stages = new Stage.Collection();
 
     var stageViews = new Stage.ContainerView({
@@ -13,6 +7,17 @@
       model: stages
     });
 
+    var stagePicker = new Stage.PickerView({
+      el: $('.stage-picker')
+    });
+    stagePicker.on('select', function (modelKey) {
+      var selectedStage = Stage.PredefinedModelFactory(modelKey);
+      stages.append(selectedStage);
+    });
+    stagePicker.render();
+
+    var defaultStage = Stage.PredefinedModelFactory('warmup');
+    defaultStage.set("index", 0);
     stages.add(defaultStage);
   });
 })(this);

@@ -2,6 +2,10 @@
 var root = this;
 var Stage = root.Stage = {};
 
+///
+/// Stage
+///
+
 Stage.Model = Backbone.Model.extend({
   initialize: function (attributes, options) {
     this.playlist = new EchoNest.StaticPlaylist([], {
@@ -24,7 +28,9 @@ Stage.View = Backbone.View.extend({
       el: this.$('.search-form'),
       model: this.model.playlist
     });
-    defaultSearchView.$(".search-type select option[value='song-radio']").attr("selected", true);
+    defaultSearchView
+      .$(".search-type select option[value='song-radio']")
+      .attr("selected", true);
     defaultSearchView.addField();
 
     var searchResultsView = new Search.SearchResultListView({
@@ -43,7 +49,8 @@ Stage.View = Backbone.View.extend({
                          $loadingIndicator);
   },
   template: function () {
-    return _.template($('#stage-template').html(), this.model.pick('title', 'subtitle', 'index'));
+    return _.template($('#stage-template').html(),
+                      this.model.pick('title', 'subtitle', 'index'));
   },
   render: function () {
     this.$el.html(this.template());
@@ -52,9 +59,25 @@ Stage.View = Backbone.View.extend({
   }
 });
 
+///
+/// Container
+///
+
 Stage.Collection = Backbone.Collection.extend({
   model: Stage.Model,
-  comparator: "index"
+  comparator: "index",
+  getLastIndex: function () {
+    return this.last().get("index");
+  },
+  append: function (modelOrModels) {
+    var models = typeof modelOrModels === 'array' ? modelOrModels : [modelOrModels];
+    var lastIndex = this.getLastIndex();
+    _.each(models, function (model) {
+      lastIndex++;
+      model.set("index", lastIndex);
+    });
+    this.add(models);
+  }
 });
 
 Stage.ContainerView = Backbone.View.extend({
@@ -89,4 +112,55 @@ Stage.ContainerView = Backbone.View.extend({
     this.$el.append($sortedChildElements);
   }
 });
+
+///
+/// Picker
+///
+
+Stage.PredefinedModelAttributes = {
+  warmup: {
+    title: 'Warm Up',
+    subtitle: 'Ease into your workout.'
+  },
+  sprint: {
+    title: 'Sprint',
+    subtitle: 'Pedal to the metal!'
+  },
+  climb: {
+      title: 'Climb',
+      subtitle: 'Feel the burrrrn.'
+  },
+  cool_down: {
+    title: 'Cool Down',
+    subtitle: 'Time to recover.'
+  }
+};
+
+Stage.PredefinedModelFactory = function (key) {
+  if (!_.has(Stage.PredefinedModelAttributes, key)) {
+    throw "No predefined stage model for key: " + key;
+  }
+  return new Stage.Model(Stage.PredefinedModelAttributes[key]);
+};
+
+Stage.PickerView = Backbone.View.extend({
+  initialize: function (options) {
+  },
+  events: {
+    'change select': 'selectChanged'
+  },
+  template: function () {
+    return _.template($('#stage-picker-template').html(), {
+      options: Stage.PredefinedModelAttributes
+    });
+  },
+  render: function () {
+    this.$('select').append(this.template());
+  },
+  selectChanged: function (event) {
+    var selectedModelKey = $(event.target).val();
+    this.trigger('select', selectedModelKey);
+  }
+});
+
 })(this);

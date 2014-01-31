@@ -15,35 +15,35 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
 body {
-	line-height: 1;
+  line-height: 1;
 }
 ol, ul {
-	list-style: none;
+  list-style: none;
 }
 blockquote, q {
-	quotes: none;
+  quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+  content: '';
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 /* font */
@@ -118,56 +118,56 @@ select,
 option,
 input,
 button {
-	-webkit-appearance:none;
-	outline: none;
+  -webkit-appearance:none;
+  outline: none;
 }
 
 a {
-	color: #84bd00;
-	text-decoration: none;
+  color: #84bd00;
+  text-decoration: none;
 }
 
 /* Segments */
 
 .stage h1 {
-	font-size: 24px;
-	margin-bottom: 10px;
-	color: #000;
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #000;
 }
 
 .stage h2 {
-	font-size: 14px;
+  font-size: 14px;
   margin-bottom: 10px;
 }
 
 #heading {
-	color: #fff;
-	padding: 0px 20px 0px 180px;
-	background: #000 url(../images/logo-navbar.png) no-repeat 40px center;
-	font-size: 25px;
-	line-height: 60px;
-	min-width: 530px;
+  color: #fff;
+  padding: 0px 20px 0px 180px;
+  background: #000 url(../images/logo-navbar.png) no-repeat 40px center;
+  font-size: 25px;
+  line-height: 60px;
+  min-width: 530px;
 }
 
 #stage-container {
-	padding: 40px;
-	overflow: hidden;
+  padding: 40px;
+  overflow: hidden;
 }
 
 .stage {
-	width: 302px;
-	float: left;
-	overflow: hidden;
-	position: relative;
+  width: 302px;
+  float: left;
+  overflow: hidden;
+  position: relative;
 }
 
 .loadingIndicator {
-	position: absolute;
+  position: absolute;
   width: 100%;
   height: 401px;
-	background: rgba(0,0,0,0.8);
-	z-index: 10;
-	border-radius: 0px 0px 10px 10px;
+  background: rgba(0,0,0,0.8);
+  z-index: 10;
+  border-radius: 0px 0px 10px 10px;
 }
 
 /* Search */
@@ -193,7 +193,7 @@ a {
 }
 
 .song-summary-container > div {
-	padding-left: 10px;
+  padding-left: 10px;
 }
 
 .song-summary-container .song-summary-tempo {
@@ -205,41 +205,41 @@ a {
 }
 
 .search-form {
-	background: #000;
-	color: #fff;
-	border-radius: 10px 10px 0px 0px;
-	border-bottom: 1px solid #84bd00;
-	padding: 15px;
-	overflow: hidden;
+  background: #000;
+  color: #fff;
+  border-radius: 10px 10px 0px 0px;
+  border-bottom: 1px solid #84bd00;
+  padding: 15px;
+  overflow: hidden;
 }
 
 .search-form p {
-	font-size: 14px;
-	float: left;
+  font-size: 14px;
+  float: left;
 }
 
 .search-form select {
-	margin: 0 0 0 10px;
-	border: 0px;
-	font-size: 15px;
-	font-family: 'proxima_nova_ltsemibold';
-	color: #84bd00;
-	background: url(../images/thin-down-arrow.png) transparent no-repeat right 0px;
-	position: relative;
-	padding: 0 15px 0 0;
-	bottom: 3px;
-	-webkit-transition: color 250ms ease, background-image 250ms ease;
-	outline: none;
-	cursor: pointer;
+  margin: 0 0 0 10px;
+  border: 0px;
+  font-size: 15px;
+  font-family: 'proxima_nova_ltsemibold';
+  color: #84bd00;
+  background: url(../images/thin-down-arrow.png) transparent no-repeat right 0px;
+  position: relative;
+  padding: 0 15px 0 0;
+  bottom: 3px;
+  -webkit-transition: color 250ms ease, background-image 250ms ease;
+  outline: none;
+  cursor: pointer;
 }
 
 .search-form select.hover {
-	background-image: url(../images/thin-down-arrow-white.png);
-	color: #fff;
+  background-image: url(../images/thin-down-arrow-white.png);
+  color: #fff;
 }
 
 .search-form select.moveArrowDown {
-	background-position: 40px 0px;
+  background-position: 40px 0px;
 }
 
 /* Search Result */
@@ -260,31 +260,31 @@ a {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-	min-height: 100px;
+  min-height: 100px;
 }
 
 .search-result .iframe-container {
-	height: 80px;
-	overflow: hidden;
-	width: 81px;
-	border-radius: 4px;
-	background: -webkit-linear-gradient(top,#333332 0,#272626 100%);
-	float: left;
-	position: absolute;
-float: left;
-top: 10px;
-left: 10px;
+  height: 80px;
+  overflow: hidden;
+  width: 81px;
+  border-radius: 4px;
+  background: -webkit-linear-gradient(top,#333332 0,#272626 100%);
+  float: left;
+  position: absolute;
+  float: left;
+  top: 10px;
+  left: 10px;
 }
 
 .search-result iframe {
   margin: 0px;
-	height: 80px;
-	width: 150px;
+  height: 80px;
+  width: 150px;
 }
 
 .search-result .song-result,
 .search-result p {
-	margin-left: 100px;
+  margin-left: 100px;
 }
 
 a.more-song-info {
@@ -375,101 +375,101 @@ p.artist {
 /* Auto Complete */
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
-	position: relative;
-	left: 40px!important;
-	width: 302px!important;
-	background: rgba(0,0,0,0.9);
-	border-radius: 0px 0px 10px 10px;
-	float: left;
-	max-height: 45vh;
-	overflow: scroll;
+  position: relative;
+  /*left: 40px!important;*/
+  width: 302px!important;
+  background: rgba(0,0,0,0.9);
+  border-radius: 0px 0px 10px 10px;
+  float: left;
+  max-height: 45vh;
+  overflow: scroll;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:first-of-type {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
-	padding: 10px 16px;
-	border-bottom: 1px solid #222;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+  padding: 10px 16px;
+  border-bottom: 1px solid #222;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover {
-	background: #84bd00;
-	cursor: pointer;
+  background: #84bd00;
+  cursor: pointer;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all .ui-corner-all.ui-state-focus {
-	color: red!important;
+  color: red!important;
 }
 
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:hover a {
-	color: #000;
+  color: #000;
 }
 
 .searchFieldContainer {
-	padding-top: 10px;
+  padding-top: 10px;
 }
 
 .searchField {
-	border-width: 0px 0px 1px 0px;
-	padding: 10px;
-	margin: 0px 0px 10px;
-	border-color: #444;
-	background: rgba(255,255,255,0.19);
-	width: 252px;
-	color: #999;
-	outline: none;
-	font-family: 'proxima_nova_rgregular';
-	font-size: 15px;
+  border-width: 0px 0px 1px 0px;
+  padding: 10px;
+  margin: 0px 0px 10px;
+  border-color: #444;
+  background: rgba(255,255,255,0.19);
+  width: 252px;
+  color: #999;
+  outline: none;
+  font-family: 'proxima_nova_rgregular';
+  font-size: 15px;
 }
 
 button {
-	-webkit-transition: 200ms ease;
+  -webkit-transition: 200ms ease;
 }
 
 button[disabled] {
-	display: none;
+  display: none;
 }
 
 .addField {
-	border: 0px;
-	background: transparent;
-	border-radius: 10px;
-	color: #fff;
-	float: left;
+  border: 0px;
+  background: transparent;
+  border-radius: 10px;
+  color: #fff;
+  float: left;
 }
 
 .removeField {
-	border: 0px;
-	background: transparent;
-	border-radius: 10px;
-	color: #fff;
-	float: left;
+  border: 0px;
+  background: transparent;
+  border-radius: 10px;
+  color: #fff;
+  float: left;
 }
 
 .buttonContainer {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 .searchContainer {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 .searchContainer button {
-	background: transparent;
-	border-radius: 12px;
-	color: #fff;
-	border: 1px solid #84bd00;
-	font-size: 12px;
-	float: right;
-	padding: 5px 10px;
+  background: transparent;
+  border-radius: 12px;
+  color: #fff;
+  border: 1px solid #84bd00;
+  font-size: 12px;
+  float: right;
+  padding: 5px 10px;
 }
 
 button:hover {
-	background: rgba(255,255,255,0.2);
-	cursor: pointer;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
 }

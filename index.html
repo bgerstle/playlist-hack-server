@@ -77,10 +77,17 @@
       <% }); %>
     </select>
   </script>
+  <script type="text/template" id="stage-picker-template">
+    <% _.each(options, function (data, option) { %>
+      <option value=<%= option %>><%= data.title %></option>
+    <% }); %>
+  </script>
 </head>
 <body>
   <div id="heading">| Workout Playlist Generator</div>
-  <div id="stage-container">
+  <div id="stage-container"></div>
+  <div class="stage-picker">
+    <select></select>
   </div>
 </body>
 </html>
