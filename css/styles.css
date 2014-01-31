@@ -490,10 +490,10 @@ button:hover {
 }
 
 .addStageConainer {
-	background: #ccc;
+	background: #ddd;
 	border-radius: 10px;
 	border: 1px solid #999;
-	padding: 70px 15px;
+	padding: 30px 15px 20px;
 	color: #000;
 	text-align: center;
 }
@@ -505,7 +505,6 @@ button:hover {
   text-align: center;
 }
 
-
 .stage-picker  {
   width: 170px;
 	position: absolute;
@@ -514,6 +513,19 @@ button:hover {
 	margin-top: 185px;
 }
 
-.stage-picker .select {
+.addStageConainer select {
+	background: url(../images/select-plus-bg.png) no-repeat center center;
+	background-size: 80%;
+	padding: 50px 50px;
+	color: #000;
+	-webkit-transition: background-size 0.2s;
+	-webkit-transition-timing-function: cubic-bezier(.07,1.41,.82,1.41);
+	border: 0px;
+	text-align: center;
+	font-size: 0px;
+}
 
+.addStageConainer select:hover {
+	cursor: pointer;
+	background-size: 85%;
 }
