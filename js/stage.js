@@ -59,12 +59,10 @@ Stage.View = Backbone.View.extend({
     });
     searchResultsView.render();
     var $loadingIndicator = this.$('.loadingIndicator');
-    form.on('search:started',
-            $loadingIndicator.fadeIn,
-            $loadingIndicator);
-    form.on('search:finished search:failed',
-            $loadingIndicator.fadeOut,
-            $loadingIndicator);
+    form.on({
+      'search:started': $loadingIndicator.fadeIn,
+      'search:finished search:failed': $loadingIndicator.fadeOut
+    }, $loadingIndicator);
   },
   template: function () {
     return _.template($('#stage-template').html(),
