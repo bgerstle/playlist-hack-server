@@ -110,6 +110,12 @@ Stage.ContainerView = Backbone.View.extend({
     })
     .value();
     this.$el.append($sortedChildElements);
+
+	  var width = 0;
+		if (_.size($sortedChildElements) > 0) {
+			width = $sortedChildElements[0].outerWidth(true);
+		}
+		this.$el.css("width", _.size(this.subviews) * width);
   }
 });
 
