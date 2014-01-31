@@ -540,7 +540,7 @@ button:hover {
 	right: 0px;
 	top: 0px;
 	bottom: 0px;
-	width: 250px;
+	width: 300px;
 	background: red;
 	border-left: 1px solid #999;
 	box-shadow: -1px 1px 21px #000;
@@ -559,5 +559,5 @@ button:hover {
 
 #rightSidebar iframe {
   height: 100%;
-  width: 100%;
+  width: 300px;
 }

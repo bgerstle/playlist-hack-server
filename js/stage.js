@@ -155,6 +155,7 @@ Stage.ContainerView = Backbone.View.extend({
     if (_.size($sortedChildElements) > 0) {
      width = $sortedChildElements[0].outerWidth(true);
    }
+   // add width of "add stage button"
    this.$el.css("width", (_.size(this.subviews) * width) + 200);
  }
 });
