@@ -364,7 +364,7 @@ Search.SearchResultView = Backbone.View.extend({
     if (!this.$el.parent()) {
       return false;
     }
-    return (this.$el.position().top >= 0) && (this.$el.position().top < $superview.height());
+    return (this.$el.position().top >= 0) && (this.$el.position().top < ($superview.height() + $superview.offset().top));
   },
   renderPlayButton: function() {
     if (this.playButton.model.has("tracks")) {
