@@ -21,6 +21,7 @@ Stage.GlobalSelectionsModel = Backbone.Collection.extend({
     this.stopListening(song);
   },
   addOrRemoveSong: function (song, selected, options) {
+    // TODO: handle uniquing of songs?
     if (selected) {
       this.add(song);
     } else {
