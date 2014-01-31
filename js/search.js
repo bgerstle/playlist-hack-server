@@ -87,7 +87,10 @@ Search.SongSearchField = Search.ArtistGenreSearchField.extend({
     });
   },
   remove: function () {
-    this.$el.autocomplete.destroy();
+    Backbone.View.prototype.remove.call(this);
+    if (_.has(this.$el, "autocomplete")) {
+      this.$el.autocomplete.destroy();
+    }
   }
 });
 
@@ -240,7 +243,6 @@ Search.BaseSearchFormView = Backbone.View.extend({
     if (this.fieldViews.length === this.maxFields) {
       return;
     }
-
     var newSubview = _.result(this, "searchFieldFactory");
     newSubview.render();
     this.fieldViews.push(newSubview);
@@ -324,9 +326,7 @@ Search.SearchResultView = Backbone.View.extend({
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
     });
-
     _.bindAll(this, "showSongSummary");
-
     this.$playButtonContainer = $('<div class="iframe-container"></div>');
     this.playButton.$el.appendTo(this.$playButtonContainer);
   },
@@ -368,12 +368,15 @@ Lists the responses for a specific search.
 Search.SearchResultListView = Backbone.View.extend({
   initialize: function(options) {
     _.bindAll(this, 'didScroll', 'checkVisibleSubviews', 'didStopScrolling');
-      // re-render when collection syncs
-      this.model.on('sync', this.render, this);
-      this.pollingInterval = 1000;
-      this.$el.scroll(this.didScroll);
+    // re-render when collection syncs
+    this.model.on('sync', this.render, this);
+    this.pollingInterval = 1000;
+  },
+  events: {
+    'scroll': 'didScroll'
   },
   remove: function() {
+    Backbone.View.prototype.remove.call(this);
     clearInterval(this.scrollPoll);
   },
   template: function() {

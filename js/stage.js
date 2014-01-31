@@ -39,7 +39,6 @@ Stage.View = Backbone.View.extend({
       searchView: defaultSearchView
     });
     searchResultsView.render();
-
     var $loadingIndicator = this.$('.loadingIndicator');
     defaultSearchView.on('search:started',
                          $loadingIndicator.fadeIn,
@@ -109,6 +108,7 @@ Stage.ContainerView = Backbone.View.extend({
       return $el.data('sortby');
     })
     .value();
+
     this.$el.append($sortedChildElements);
 
 	  var width = 0;
