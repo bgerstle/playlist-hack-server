@@ -1,6 +1,41 @@
 (function () {
+
 var root = this;
 var Stage = root.Stage = {};
+
+///
+/// Global Song Selection
+///
+
+Stage.GlobalSelectionsModel = Backbone.Collection.extend({
+  listenToSongsFromCollection: function (songCollection) {
+    songCollection.on({
+      'add': this.listenForSongSelection,
+      'remove': this.stopListeningForSongSelection
+    }, this);
+  },
+  listenForSongSelection: function (song) {
+    this.listenTo(song, 'change:selected', this.addOrRemoveSong, this);
+  },
+  stopListeningForSongSelection: function (song) {
+    this.stopListening(song);
+  },
+  addOrRemoveSong: function (song, selected, options) {
+    if (selected) {
+      this.add(song);
+    } else {
+      this.remove(song);
+    }
+  }
+});
+
+var globalSelectionsModel = null;
+Stage.getGlobalSelectionsModel = function () {
+  if (!globalSelectionsModel) {
+    globalSelectionsModel = new Stage.GlobalSelectionsModel();
+  }
+  return globalSelectionsModel;
+};
 
 ///
 /// Stage
@@ -8,12 +43,16 @@ var Stage = root.Stage = {};
 
 Stage.Model = Backbone.Model.extend({
   initialize: function (attributes, options) {
-    this.playlist = new EchoNest.StaticPlaylist([], {
-      comparator: function(a, b) {
+    this.playlist = _.result(options, "playlist");
+    if (!this.playlist) {
+      this.playlist = new EchoNest.StaticPlaylist([], {
+        comparator: function(a, b) {
         // sort by song energy, descending
         return b.get("audio_summary").energy - a.get("audio_summary").energy;
-      }
-    });
+        }
+      });
+    }
+    Stage.getGlobalSelectionsModel().listenToSongsFromCollection(this.playlist);
   }
 });
 
@@ -29,8 +68,8 @@ Stage.View = Backbone.View.extend({
       model: this.model.playlist
     });
     defaultSearchView
-      .$(".search-type select option[value='song-radio']")
-      .attr("selected", true);
+    .$(".search-type select option[value='song-radio']")
+    .attr("selected", true);
     defaultSearchView.addField();
 
     var searchResultsView = new Search.SearchResultListView({
@@ -111,12 +150,12 @@ Stage.ContainerView = Backbone.View.extend({
 
     this.$el.append($sortedChildElements);
 
-	  var width = 0;
-		if (_.size($sortedChildElements) > 0) {
-			width = $sortedChildElements[0].outerWidth(true);
-		}
-		this.$el.css("width", (_.size(this.subviews) * width) + 200);
-  }
+    var width = 0;
+    if (_.size($sortedChildElements) > 0) {
+     width = $sortedChildElements[0].outerWidth(true);
+   }
+   this.$el.css("width", (_.size(this.subviews) * width) + 200);
+ }
 });
 
 ///
@@ -133,8 +172,8 @@ Stage.PredefinedModelAttributes = {
     subtitle: 'Put your pedals to the metal!'
   },
   climb: {
-      title: 'Climb',
-      subtitle: 'Feel the burn, all the way to the top.'
+    title: 'Climb',
+    subtitle: 'Feel the burn, all the way to the top.'
   },
   cool_down: {
     title: 'Cool Down',

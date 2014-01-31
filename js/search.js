@@ -326,13 +326,14 @@ Search.SearchResultView = Backbone.View.extend({
     this.playButton = new PlayButtonView({
       model: new PlayButtonModel()
     });
-    _.bindAll(this, "showSongSummary");
     this.$playButtonContainer = $('<div class="iframe-container"></div>');
     this.playButton.$el.appendTo(this.$playButtonContainer);
+    this.model.on('change:selected', this.updateSelectedState, this);
   },
   events: function () {
     return {
-      'click': 'click'
+      'click': 'click',
+      'click .more-song-info': 'showSongSummary'
     };
   },
   template: function() {
@@ -342,18 +343,18 @@ Search.SearchResultView = Backbone.View.extend({
     // !!!: this is awful
     this.$el.html(this.template());
     this.$el.append(this.$playButtonContainer);
-    this.$('.more-song-info').click(this.showSongSummary);
   },
   click: function (event) {
     event.preventDefault();
-    if (this.$el.attr("selected")) {
-      this.$el.removeAttr("selected");
-      this.trigger('song:unselect', this);
-    } else {
-      this.$el.attr("selected", true);
-      this.trigger('song:select', this);
-    }
+    this.model.set("selected", !this.model.get("selected"));
     return false;
+  },
+  updateSelectedState: function (model, selected, options) {
+    if (selected) {
+      this.$el.attr("selected", true);
+    } else {
+      this.$el.removeAttr("selected");
+    }
   },
   showSongSummary: function (e) {
     if (!this.$('.song-summary-container').hasClass('selected')) {
