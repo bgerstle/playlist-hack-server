@@ -26,12 +26,14 @@
     var playlistButtonModel = new PlayButtonModel({
       theme: PlayButtonModel.SupportedParameters.theme.black,
       view: PlayButtonModel.SupportedParameters.view.list,
-      tracksetDetection: false
+      tracksetDetection: false,
+      title: "Workout Playlist",
+      tracks: []
     });
     var playlistButtonView = new PlayButtonView({
       model: playlistButtonModel
     });
-    playlistButtonView
+    playlistButtonView.render();
     $('#rightSidebar').append(playlistButtonView.el);
 
     Stage
