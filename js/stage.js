@@ -126,15 +126,15 @@ Stage.ContainerView = Backbone.View.extend({
 Stage.PredefinedModelAttributes = {
   warmup: {
     title: 'Warm Up',
-    subtitle: 'Ease into your workout.'
+    subtitle: 'Loosen up with a light, upbeat song.'
   },
   sprint: {
     title: 'Sprint',
-    subtitle: 'Pedal to the metal!'
+    subtitle: 'Put your pedals to the metal!'
   },
   climb: {
       title: 'Climb',
-      subtitle: 'Feel the burrrrn.'
+      subtitle: 'Feel the burn, all the way to the top.'
   },
   cool_down: {
     title: 'Cool Down',
