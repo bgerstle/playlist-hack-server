@@ -1,8 +1,8 @@
 (function() {
 
-var root = this.exports || this;
+  var root = this.exports || this;
 
-var Search = root.Search = {};
+  var Search = root.Search = {};
 
 ///
 /// Search Parameters
@@ -11,7 +11,7 @@ var Search = root.Search = {};
 /*
  View which accepts text from the user that specifies an artist or genre seed
  */
-Search.ArtistGenreSearchField = Backbone.View.extend({
+ Search.ArtistGenreSearchField = Backbone.View.extend({
   tagName: "input",
   className: "searchField",
   attributes: {
@@ -20,13 +20,16 @@ Search.ArtistGenreSearchField = Backbone.View.extend({
   },
   serialize: function() {
     return this.$el.val();
+  },
+  validate: function () {
+    return undefined;
   }
 });
 
 /*
  Field which provides autocomplete suggestions for combined song title & artist.
-*/
-Search.AutocompleteSearchField = Search.ArtistGenreSearchField.extend({
+ */
+ Search.AutocompleteSearchField = Search.ArtistGenreSearchField.extend({
   initialize: function(opts) {
     _.bindAll(this, 'autoCompleteSourceCallback', 'autoCompleteSelected');
     this.model.comparator = function(a, b) {
@@ -37,10 +40,20 @@ Search.AutocompleteSearchField = Search.ArtistGenreSearchField.extend({
     event.preventDefault();
     this.$el.val(ui.item.label);
     this.$el.attr("data-id", ui.item.data_id);
+    this.validate();
     return false;
   },
   serialize: function() {
     return this.$el.attr("data-id");
+  },
+  validate: function () {
+    var dataID = this.$el.attr("data-id");
+    if (!!dataID && dataID.length > 0) {
+      this.$el.attr("valid", true);
+      return undefined
+    }
+    this.$el.attr("valid", false);
+    return 'Missing data-id';
   },
   render: function () {
     this.$el.autocomplete({
@@ -58,7 +71,7 @@ Search.AutocompleteSearchField = Search.ArtistGenreSearchField.extend({
   }
 });
 
-Search.SongSearchField = Search.AutocompleteSearchField.extend({
+ Search.SongSearchField = Search.AutocompleteSearchField.extend({
   autoCompleteSourceCallback: function(request, callback) {
     this.model.deferredFetch({
       songParams: {
@@ -79,7 +92,7 @@ Search.SongSearchField = Search.AutocompleteSearchField.extend({
   }
 });
 
-Search.ArtistSearchField = Search.AutocompleteSearchField.extend({
+ Search.ArtistSearchField = Search.AutocompleteSearchField.extend({
   autoCompleteSourceCallback: function(request, callback) {
     this.model.deferredFetch({
       artistParams: {
@@ -98,7 +111,7 @@ Search.ArtistSearchField = Search.AutocompleteSearchField.extend({
   }
 });
 
-Search.SearchTypeView = Backbone.View.extend({
+ Search.SearchTypeView = Backbone.View.extend({
   initialize: function(opts) {
     if (!opts || !opts.types) {
       throw "Must specify search types!";
@@ -113,7 +126,7 @@ Search.SearchTypeView = Backbone.View.extend({
   },
   typeSelected: function(event) {
     var selectedVal = $(event.target).val();
-		this.updateArrowClass(this.searchTypes[selectedVal].text);
+    this.updateArrowClass(this.searchTypes[selectedVal].text);
     this.trigger('change', selectedVal);
     $(event.target).removeClass('hover');
   },
@@ -158,33 +171,33 @@ Search.SearchTypeView = Backbone.View.extend({
 /*
  View which contains controls which allow the user to tweak and execute a search.
  */
-Search.BaseSearchFormView = Backbone.View.extend({
+ Search.BaseSearchFormView = Backbone.View.extend({
   searchFieldFactory: function() {
     return new Search.ArtistGenreSearchField();
   },
   searchTypeFactory: function() {
     return {
-       'artist-radio': {
-          text: "Artist Radio",
-          seed: 'artist'
-       },
-       'genre-radio': {
-          text: "Genre",
-          seed: 'genre'
-       }
-    };
-  },
-  searchTypeViewFactory: function() {
-    var types = _.result(this, "searchTypeFactory");
-    return new Search.SearchTypeView({
-      el: this.$('.search-type'),
-      types: types
-    });
-  },
-  initialize: function(opts) {
-    this.searchDefaults = opts.searchDefaults;
-    this.searchTypeView = _.result(this, "searchTypeViewFactory");
-    this.searchTypeView.on('change', this.searchTypeChanged, this);
+     'artist-radio': {
+      text: "Artist Radio",
+      seed: 'artist'
+    },
+    'genre-radio': {
+      text: "Genre",
+      seed: 'genre'
+    }
+  };
+},
+searchTypeViewFactory: function() {
+  var types = _.result(this, "searchTypeFactory");
+  return new Search.SearchTypeView({
+    el: this.$('.search-type'),
+    types: types
+  });
+},
+initialize: function(opts) {
+  this.searchDefaults = opts.searchDefaults;
+  this.searchTypeView = _.result(this, "searchTypeViewFactory");
+  this.searchTypeView.on('change', this.searchTypeChanged, this);
     // until search type is modelized, only render it once, otherwise the
     // select will always be reset
     this.searchTypeView.render();
@@ -237,7 +250,7 @@ Search.BaseSearchFormView = Backbone.View.extend({
     return this.searchTypeView.serialize().value;
   },
   searchFieldChanged: function(event) {
-    if (event.which === 13) {
+    if (event.which === 13 && this.validate()) {
       event.preventDefault();
       this.search();
       return false;
@@ -273,14 +286,26 @@ Search.BaseSearchFormView = Backbone.View.extend({
     .map(this.encodeSeedValue)
     .value();
   },
+  validate: function () {
+    var errors = _.reduce(this.fieldViews, function (memo, fieldView) {
+      var error = fieldView.validate();
+      if (error) {
+        memo.push(error);
+      }
+      return memo;
+    }, []);
+    return _.isEmpty(errors) ? undefined : errors;
+  },
   serialize: function() {
-    // TODO: modelize this so we can do validation
     var searchType = this.searchTypeView.serialize();
     var params = {type: searchType.value};
     params[searchType.seed] = this.getEncodedFieldValues();
     return params;
   },
   search: function(e) {
+    if (this.validate()) {
+      return;
+    }
     var params = _.defaults(this.serialize(), this.searchDefaults);
     this.trigger('search:started', params);
     return this.model.deferredFetch({
@@ -303,13 +328,13 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
   searchFieldFactory: function() {
     switch (this.getSearchType()) {
       case 'song-radio':
-        return new Search.SongSearchField({
-          model: new EchoNest.SearchSongModel()
-        });
+      return new Search.SongSearchField({
+        model: new EchoNest.SearchSongModel()
+      });
       case 'artist':
-        return new Search.ArtistSearchField({
-          model: new EchoNest.SearchArtistModel()
-        });
+      return new Search.ArtistSearchField({
+        model: new EchoNest.SearchArtistModel()
+      });
       default: {
         return Search.BaseSearchFormView.prototype.searchFieldFactory.call(this);
       }
@@ -322,9 +347,9 @@ Search.SearchFormView = Search.BaseSearchFormView.extend({
         seed: 'song_id'
       },
       'artist': {
-          text: "Artist",
-          seed: 'artist_id'
-       }
+        text: "Artist",
+        seed: 'artist_id'
+      }
     }, Search.BaseSearchFormView.prototype.searchTypeFactory.call(this));
   },
   initialize: function(opts) {
@@ -492,14 +517,14 @@ Search.SearchResultListView = Backbone.View.extend({
     //             _.first(visibleSubviews).model.get("title"),
     //             "to",
     //             _.last(visibleSubviews).model.get("title")].join(' '));
-    var self = this;
-    _.each(visibleSubviews, function (subview) {
-      _.defer(function () {
-        if (subview.isVisible(self.$el)) {
-          subview.render();
-        }
-      });
-    });
-  }
+var self = this;
+_.each(visibleSubviews, function (subview) {
+  _.defer(function () {
+    if (subview.isVisible(self.$el)) {
+      subview.render();
+    }
+  });
+});
+}
 });
 })(this);

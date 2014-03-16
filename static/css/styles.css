@@ -458,6 +458,18 @@ p.artist {
   text-shadow: 1px 1px 1px #000;
 }
 
+.searchField[valid=true] {
+  background: rgba(114,210,0,0.3);
+}
+
+.searchField[valid=false] {
+ background: rgba(255,0,0,0.3);
+}
+
+.searchField:not([valid]) {
+  background: rgba(255,255,255,0.19);
+}
+
 .stage-module-container {
 	position: absolute;
 	z-index: 15;
@@ -469,7 +481,6 @@ p.artist {
   padding: 10px;
   margin: 0px 0px 10px;
   border-color: #444;
-  background: rgba(255,255,255,0.19);
   width: 252px;
   -webkit-transition: 250ms ease;
   color: #999;

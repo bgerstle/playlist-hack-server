@@ -38,7 +38,7 @@ Stage.Model = Backbone.Model.extend({
 Stage.View = Backbone.View.extend({
   className: "stage",
   initialize: function (options) {
-    // technically this should be done in render... 
+    // technically this should be done in render...
     this.$el.addClass(this.model.get("className"));
 
     this.model.on('change', this.render, this);
